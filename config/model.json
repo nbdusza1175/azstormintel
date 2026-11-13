@@ -1,0 +1,306 @@
+{
+  "version": "3.3.0",
+  "method": "ModClark: distributed SCS-CN losses + D8 time-area translation (channel velocity at the routed discharge) + Clark linear reservoir (regional R). Gauges are checks only.",
+  "common": {
+    "crs": "EPSG:26912",
+    "dem_res_m": 10,
+    "grid_buffer_m": 1500,
+    "search_box_km": 20,
+    "snap_radius_m": 150,
+    "basin_source": "auto",
+    "area_tolerance": 0.15,
+    "default_hsg": "C",
+    "dt_min": 5,
+    "tail_hr": 24,
+    "large_basin_flag_sqmi": 10,
+    "cn_table": "cn_table.json",
+    "durations_hr": [
+      0.25,
+      0.5,
+      1,
+      2,
+      3,
+      6,
+      12,
+      24,
+      48,
+      72
+    ],
+    "travel_time": {
+      "sheet_max_ft": 100,
+      "sheet_n": 0.4,
+      "channel_threshold_ac": 50,
+      "channel_n": 0.045,
+      "hg_R_coef": 0.4,
+      "hg_R_exp": 0.3,
+      "slope_reach_m": 300,
+      "min_slope": 0.005,
+      "min_channel_slope": 0.003,
+      "vmin_fps": 0.1,
+      "vmax_fps": 15.0,
+      "depression_tol_m": 0.3,
+      "depression_reach_m": 1000,
+      "channel_n_developed": 0.025,
+      "developed_imp_frac": 0.3,
+      "channel_velocity": "kinematic",
+      "width_coef": 12.0,
+      "width_exp": 0.4,
+      "q_area_exp": 0.6,
+      "channel_velocity_note": "v3.2 method: wide rectangular Manning, W = 12*A^0.4 ft (A sq mi; generic semiarid curve, verify), Q_cell = Qpeak*(A/A_total)^0.6, loop until peak changes < 2%"
+    },
+    "routing": {
+      "R_equation": "fcdmc",
+      "fcdmc": {
+        "a": 0.37,
+        "b_tc": 1.11,
+        "c_area": -0.57,
+        "d_length": 0.8,
+        "note": "R = 0.37 Tc^1.11 A^-0.57 L^0.80 (hr, sq mi, mi); FCDMC Drainage Design Manual Hydrology - verify coefficients before freezing"
+      },
+      "R_k": 0.6,
+      "attenuation": true
+    },
+    "fcdmc_tc": {
+      "Kb": 0.1
+    },
+    "mrms": {
+      "pass2_01h": "MultiSensor_QPE_01H_Pass2_00.00",
+      "radaronly_01h": "RadarOnly_QPE_01H_00.00",
+      "radaronly_15m": "RadarOnly_QPE_15M_00.00",
+      "pass2_24h": "MultiSensor_QPE_24H_Pass2_00.00",
+      "precipflag": "PrecipFlag_00.00",
+      "subhourly": "auto",
+      "subhourly_tc_hr": 3.0,
+      "compare_radaronly": true,
+      "precipflag_check": true,
+      "threads": 8,
+      "window_margin_deg": 0.15
+    },
+    "antecedent": {
+      "method": "arc_band",
+      "method_options": "arc_band (headline ARC II, band ARC I-III; NEH-630 Ch.10) | neh4_5day | api",
+      "days": 60,
+      "k": 0.9,
+      "dry_in": 0.5,
+      "wet_in": 1.5,
+      "neh4_dormant_in": [
+        0.5,
+        1.1
+      ],
+      "neh4_growing_in": [
+        1.4,
+        2.1
+      ],
+      "growing_months": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    "landcover": {
+      "wcs_landcover": "mrlc_download__NLCD_2021_Land_Cover_L48",
+      "wcs_impervious": "mrlc_download__NLCD_2021_Impervious_L48",
+      "wms_landcover": "NLCD_2021_Land_Cover_L48",
+      "default_class": 42
+    },
+    "checks": {
+      "rain_total_pct": 25,
+      "rain_total_abs_in": 0.25,
+      "rain_hourly_pct": 50,
+      "time_tol_hr": 1,
+      "flow_factor": 2.0,
+      "status_interval_hr": 12
+    }
+  },
+  "events": {
+    "oct30_nov2_2026": {
+      "label": "Oct 30 - Nov 2, 2026 storm",
+      "start_local": "2026-10-30T11:00",
+      "end_local": "2026-11-02T23:00",
+      "tz": "America/Phoenix",
+      "site_event": "2026-10-30"
+    }
+  },
+  "basins": {
+    "fort_valley": {
+      "name": "Fort Valley (Rio de Flag @ Snowbowl Rd)",
+      "role": "development basin",
+      "outlet": [
+        35.2562,
+        -111.7127
+      ],
+      "polygon": "fort_valley*.geojson",
+      "published_area_sqmi": {
+        "StreamStats": 29.0
+      },
+      "fcdmc_tc": {
+        "Kb": 0.1
+      },
+      "peak_flow_stats": {
+        "csv": "fort_valley*streamstats*.csv",
+        "region": "AZ Peak Region 1 High Elevation (SIR 2014-5211)",
+        "area_sqmi": 29.0,
+        "transfer_exponent": 0.6,
+        "source": "StreamStats report fort_valley_streamstats.csv",
+        "table": {
+          "2": [
+            158
+          ],
+          "5": [
+            345
+          ],
+          "10": [
+            516,
+            211,
+            1260
+          ],
+          "25": [
+            787
+          ],
+          "50": [
+            1030
+          ],
+          "100": [
+            1300
+          ],
+          "200": [
+            1620
+          ],
+          "500": [
+            2100
+          ]
+        }
+      },
+      "gauges": [
+        {
+          "id": "3406",
+          "type": "rain",
+          "lat": 35.256764,
+          "lon": -111.719223,
+          "file": "*3406*",
+          "tz": "UTC",
+          "units": "auto"
+        },
+        {
+          "id": "3407",
+          "type": "stage",
+          "lat": 35.25676,
+          "lon": -111.71922,
+          "file": "*3407*",
+          "tz": "UTC",
+          "regulated": false,
+          "rating": null
+        }
+      ],
+      "structure_notes": []
+    },
+    "mountain_dell": {
+      "name": "Mountain Dell (Sinclair Wash)",
+      "role": "test basin",
+      "outlet": [
+        35.164,
+        -111.6794
+      ],
+      "polygon": "mountain_dell*.geojson",
+      "published_area_sqmi": {
+        "USGS 09400650": 8.11,
+        "FLO-2D IEA": 8.8,
+        "StreamStats (pour point 35.16266,-111.68215)": 5.82
+      },
+      "fcdmc_tc": {
+        "Kb": 0.1
+      },
+      "peak_flow_stats": {
+        "csv": [
+          "mountain_dell*streamstats*.csv"
+        ],
+        "region": "AZ Peak Region 2 Colorado Plateau (SIR 2014-5211)",
+        "transfer_exponent": 0.6,
+        "area_sqmi": 5.82,
+        "table": null,
+        "source": "StreamStats report mountain_dell_streamstats.csv"
+      },
+      "channel": {
+        "name": "Mountain Dell concrete channel (built 2020)",
+        "source": "Civiltec, Mountain Dell Channel Improvements Design Report (2019)",
+        "design_storm": "100-yr 24-hr",
+        "design_flows_cfs": {
+          "above Holmes Ave (20 ft wide)": 1088,
+          "below Holmes Ave (22 ft wide)": 1391
+        },
+        "benchmark_cfs": 1391,
+        "width_ft": [
+          20,
+          22
+        ],
+        "wall_ft": 4.0,
+        "slope": 0.005,
+        "n": 0.013,
+        "freeboard_ft": 0.0,
+        "note": "Zero freeboard at design flow; critical depth (4.5-5.0 ft) is above the 4 ft walls, so the channel looks full well below its design flow."
+      },
+      "design_check": {
+        "T": 100,
+        "D_hr": 24,
+        "amc": "II",
+        "benchmarks": [
+          {
+            "label": "IEA (FLO-2D) design, below Holmes Ave",
+            "cfs": 1391
+          },
+          {
+            "label": "IEA (FLO-2D) design, above Holmes Ave",
+            "cfs": 1088
+          },
+          {
+            "label": "FEMA FIS 100-yr at Palmer Ave",
+            "cfs": 470
+          },
+          {
+            "label": "StreamStats natural 100-yr (area-transferred)",
+            "cfs": 2055
+          }
+        ],
+        "note": "Model is natural/unregulated; the IEA flows may include the dam about 1.4 mi upstream. Treat as a range, not a target."
+      },
+      "gauges": [
+        {
+          "id": "Mt Dell rain",
+          "type": "rain",
+          "lat": 35.161626,
+          "lon": -111.700024,
+          "file": [
+            "*mt*dell*rain*",
+            "*mt*dell*",
+            "*mtdell*",
+            "*sinclair*"
+          ],
+          "file_exclude": [
+            "*3403*",
+            "*.geojson",
+            "*streamstats*",
+            "*.py",
+            "*.json"
+          ],
+          "tz": "UTC",
+          "units": "auto"
+        },
+        {
+          "id": "3403",
+          "type": "stage",
+          "lat": 35.160954,
+          "lon": -111.701567,
+          "file": "*3403*",
+          "tz": "UTC",
+          "regulated": true,
+          "rating": null
+        }
+      ],
+      "structure_notes": [
+        "Dam about 1.4 mi upstream of Mountain Dell (gauge 3403 reads its pool): 24 in CMP low outlet, spillway about 20 ft up. Below the spillway the release is roughly 40-50 cfs. Results are natural, unregulated flow."
+      ]
+    }
+  }
+}

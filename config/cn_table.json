@@ -1,0 +1,181 @@
+{
+  "version": "3.1.0",
+  "description": "SCS/NRCS curve numbers (AMC II) by NLCD class and hydrologic soil group [A,B,C,D]. Pervious CN only for developed classes; impervious fraction (NLCD) is blended at impervious_cn. Swap this file to change the loss parameterisation; no per-event tuning.",
+  "sources": "NRCS TR-55 (1986) Tables 2-2a to 2-2d; NEH-630 Ch. 9; Williams (1995) slope adjustment; Hawkins/Chow AMC conversions",
+  "impervious_cn": 98,
+  "ia_ratio": 0.2,
+  "cn_bounds": [
+    30,
+    99
+  ],
+  "dual_hsg_use": "undrained",
+  "slope_adjustment": {
+    "enabled": false,
+    "method": "Williams 1995: CN2s = (CN3-CN2)/3*(1-2exp(-13.86 S)) + CN2",
+    "increase_only": true,
+    "max_slope": 1.0,
+    "note": "Off by default in v3.1: Williams (1995) was derived for agricultural SWAT HRUs and added ~3-5 CN on steep forest."
+  },
+  "amc": {
+    "I": "CN1 = 4.2 CN2 / (10 - 0.058 CN2)",
+    "III": "CN3 = 23 CN2 / (10 + 0.13 CN2)"
+  },
+  "nlcd_cn": {
+    "11": {
+      "name": "Open water",
+      "cn": [
+        98,
+        98,
+        98,
+        98
+      ]
+    },
+    "12": {
+      "name": "Perennial ice/snow",
+      "cn": [
+        98,
+        98,
+        98,
+        98
+      ]
+    },
+    "21": {
+      "name": "Developed, open space (pervious part: open space good)",
+      "cn": [
+        39,
+        61,
+        74,
+        80
+      ]
+    },
+    "22": {
+      "name": "Developed, low intensity (pervious part)",
+      "cn": [
+        39,
+        61,
+        74,
+        80
+      ]
+    },
+    "23": {
+      "name": "Developed, medium intensity (pervious part)",
+      "cn": [
+        39,
+        61,
+        74,
+        80
+      ]
+    },
+    "24": {
+      "name": "Developed, high intensity (pervious part)",
+      "cn": [
+        39,
+        61,
+        74,
+        80
+      ]
+    },
+    "31": {
+      "name": "Barren land (rock/sand/clay; bare soil)",
+      "cn": [
+        77,
+        86,
+        91,
+        94
+      ]
+    },
+    "41": {
+      "name": "Deciduous forest (woods, fair)",
+      "cn": [
+        36,
+        60,
+        73,
+        79
+      ]
+    },
+    "42": {
+      "name": "Evergreen forest (woods, fair)",
+      "cn": [
+        36,
+        60,
+        73,
+        79
+      ]
+    },
+    "43": {
+      "name": "Mixed forest (woods, fair)",
+      "cn": [
+        36,
+        60,
+        73,
+        79
+      ]
+    },
+    "52": {
+      "name": "Shrub/scrub (desert/semiarid shrub, fair)",
+      "cn": [
+        55,
+        72,
+        81,
+        86
+      ]
+    },
+    "71": {
+      "name": "Grassland/herbaceous (pasture/range, fair)",
+      "cn": [
+        49,
+        69,
+        79,
+        84
+      ]
+    },
+    "81": {
+      "name": "Pasture/hay (fair)",
+      "cn": [
+        49,
+        69,
+        79,
+        84
+      ]
+    },
+    "82": {
+      "name": "Cultivated crops (row crops SR, good)",
+      "cn": [
+        67,
+        78,
+        85,
+        89
+      ]
+    },
+    "90": {
+      "name": "Woody wetlands",
+      "cn": [
+        70,
+        77,
+        85,
+        90
+      ]
+    },
+    "95": {
+      "name": "Emergent herbaceous wetlands",
+      "cn": [
+        70,
+        77,
+        85,
+        90
+      ]
+    }
+  },
+  "unknown_class_cn": [
+    36,
+    60,
+    73,
+    79
+  ],
+  "class_impervious_fraction": {
+    "21": 0.1,
+    "22": 0.35,
+    "23": 0.65,
+    "24": 0.9
+  }
+}

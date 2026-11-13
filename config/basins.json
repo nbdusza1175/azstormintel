@@ -1,0 +1,61 @@
+{
+  "version": "3.3.0",
+  "region_bbox": [-112.02, 34.98, -111.48, 35.42],
+  "basins": [
+    {
+      "id": "fort_valley",
+      "name": "Fort Valley",
+      "polygon": "data/basins/fort_valley.geojson",
+      "outlet": [-111.71270813324433, 35.256205933214396],
+      "published_area_sqmi": null,
+      "rain_gauges": [
+        {"id": "3406", "name": "Rio de Flag @ Snowbowl Rd", "lat": 35.256764, "lon": -111.719223, "tz": "UTC"}
+      ],
+      "stage_gauges": [
+        {"id": "3407", "name": "Fort Valley stage", "regulated": false}
+      ],
+      "frequency": [
+        {"basis": "streamstats", "file": "data/streamstats/fort_valley_streamstats.csv", "label": "USGS StreamStats (natural flow)"}
+      ],
+      "channel": null,
+      "notes": []
+    },
+    {
+      "id": "mountain_dell",
+      "name": "Mountain Dell (Sinclair Wash)",
+      "polygon": "data/basins/mountain_dell.geojson",
+      "outlet": [-111.67939671066742, 35.16402356935214],
+      "published_area_sqmi": {"usgs_09400650": 8.11, "iea_flo2d": 8.8},
+      "rain_gauges": [
+        {"id": "MtDell", "name": "Mt Dell Sinclair Wash", "lat": 35.161626, "lon": -111.700024, "tz": "UTC"}
+      ],
+      "stage_gauges": [
+        {"id": "3403", "name": "Sinclair Wash dam pool", "lat": 35.160954, "lon": -111.701567, "regulated": true,
+         "note": "Reads the pool behind the dam about 1.4 mi upstream of Mountain Dell (24 in CMP low outlet; spillway about 20 ft up). Timing check only."}
+      ],
+      "frequency": [
+        {"basis": "streamstats", "file": "data/streamstats/mountain_dell_streamstats.csv", "label": "USGS StreamStats (natural flow)",
+         "area_sqmi": 5.82, "transfer_exponent": 0.6},
+        {"basis": "point", "label": "FEMA FIS 100-yr at Palmer Ave", "points": {"100": 470}},
+        {"basis": "point", "label": "2017 IEA (FLO-2D) 100-yr 24-hr design", "points": {"100": 1391}}
+      ],
+      "channel": {
+        "name": "Mountain Dell concrete channel (built 2020)",
+        "source": "Civiltec, Mountain Dell Channel Improvements Design Report (2019)",
+        "design_storm": "100-yr 24-hr",
+        "design_flows_cfs": {"above Holmes Ave (20 ft wide)": 1088, "below Holmes Ave (22 ft wide)": 1391},
+        "benchmark_cfs": 1391,
+        "section": {"width_ft": [20, 22], "wall_ft": 4.0, "slope": 0.005, "n": 0.013},
+        "freeboard_ft": 0.0,
+        "note": "Zero freeboard; critical depth (4.5-5.0 ft) exceeds the 4 ft walls at design flow. The channel looks full well below its design flow."
+      },
+      "notes": [
+        "Model results are natural (unregulated) flow. A dam about 1.4 mi upstream throttles the upper basin; while its pool is below the spillway the release is roughly 40-50 cfs.",
+        "Three 100-yr references differ about fourfold: FIS 470, IEA 1,088-1,391, StreamStats natural about 2,055 cfs (transferred to 8.56 sq mi)."
+      ]
+    }
+  ],
+  "events": [
+    {"id": "2026-10-30", "name": "Oct 30 - Nov 2, 2026", "start_mst": "2026-10-30T00:00", "end_mst": "2026-11-03T00:00"}
+  ]
+}

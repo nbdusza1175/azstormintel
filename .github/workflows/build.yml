@@ -1,0 +1,67 @@
+name: Build data
+# Heavy, committed outputs: basemap tiles, archived radar events, flood model runs.
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "basemap | radar | model | all"
+        default: "all"
+      model_event:
+        description: "model event key in config/model.json"
+        default: "oct30_nov2_2026"
+      force_radar:
+        description: "rebuild radar events that already exist (true/false)"
+        default: "false"
+  push:
+    branches: [main, "site-*"]
+    paths: ["config/**", "azstorm/**", "scripts/**", "data/**", ".github/workflows/build.yml"]
+permissions:
+  contents: write
+concurrency:
+  group: build-data
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    env:
+      TASK: ${{ github.event.inputs.task || 'all' }}
+      MODEL_EVENT: ${{ github.event.inputs.model_event || 'oct30_nov2_2026' }}
+      FORCE_RADAR: ${{ github.event.inputs.force_radar || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: .cache
+          key: build-cache-${{ github.run_id }}
+          restore-keys: build-cache-
+      - name: Basemap tiles (skips tiles already in the repo)
+        if: env.TASK == 'basemap' || env.TASK == 'all'
+        run: python scripts/build_basemap.py
+      - name: Radar events
+        if: env.TASK == 'radar' || env.TASK == 'all'
+        run: |
+          for ev in $(python -c "import json;print(' '.join(e['id'] for e in json.load(open('config/basins.json'))['events']))"); do
+            if [ "$FORCE_RADAR" = "true" ] || [ ! -f "site/data/events/$ev/meta.json" ]; then
+              python scripts/run_event.py --event "$ev"
+            else
+              echo "radar $ev exists - skipped"
+            fi
+          done
+      - name: Flood model
+        if: env.TASK == 'model' || env.TASK == 'all'
+        run: python scripts/run_model.py --event "$MODEL_EVENT" --preflight
+      - name: Commit outputs
+        if: always()
+        run: |
+          git config user.name "azstorm-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A site/
+          if git diff --cached --quiet; then echo "nothing to commit"; exit 0; fi
+          git commit -m "data: $TASK ($MODEL_EVENT) [run ${{ github.run_id }}]"
+          for i in 1 2 3; do git pull --rebase -X theirs origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break; sleep 5; done

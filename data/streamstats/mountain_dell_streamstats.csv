@@ -1,0 +1,54 @@
+﻿StreamStats Output Report
+
+State/Region ID,AZ
+Latitude,35.16266
+Longitude,-111.68215
+Time,11/11/2026, 10:06:59 AM
+
+Basin Characteristics
+"Parameter Code","Parameter Description","Value","Unit"
+"CONTDA","Area that contributes flow to a point on a stream","5.82","square miles"
+"DRNAREA","Area that drains to a point on a stream","5.82","square miles"
+"ELEV","Mean Basin Elevation","7159.318","feet"
+
+
+Peak-Flow Statistics Parameters,100.0 Percent Peak Region 2 Colorado Plateau 2014 5211
+"Parameter Code","Parameter Name","Value","Units","Min Limit","Max Limit"
+"CONTDA","Contributing Drainage Area","5.82","square miles","0.103","16017"
+"ELEV","Mean Basin Elevation","7159.318","feet","",""
+
+*** Peak-Flow Statistics Limitations ***
+RemovedRegions,Peak_Region_1_High_Elev_2014_5211 equations are not appropriate for this location and have been removed from the final report. This region does not meet the following criteria: ELEV>=7500.0.
+
+Peak-Flow Statistics Flow Report,100.0 Percent Peak Region 2 Colorado Plateau 2014 5211
+"PIL: Lower 90% Prediction Interval, PIU: Upper 90% Prediction Interval, ASEp: Average Standard Error of Prediction, SE: Standard Error, PC: Percent Correct, RMSE: Root Mean Squared Error, PseudoR^2: Pseudo R Squared (other-- see report)"
+"Statistic","Value","Unit","PIL","PIU","ASEp"
+"50-percent AEP flood","129","ft^3/s","26.5","628","122"
+"20-percent AEP flood","328","ft^3/s","94.5","1140","87.2"
+"10-percent AEP flood","531","ft^3/s","174","1620","75.7"
+"4-percent AEP flood","884","ft^3/s","316","2470","68.6"
+"2-percent AEP flood","1220","ft^3/s","444","3350","66.6"
+"1-percent AEP flood","1630","ft^3/s","592","4490","67.3"
+"0.5-percent AEP flood","2130","ft^3/s","759","5970","68.8"
+"0.2-percent AEP flood","2910","ft^3/s","987","8580","72.9"
+
+
+Maximum Probable Flood Statistics Parameters,100.0 Percent Crippen Bue Region 16
+"Parameter Code","Parameter Name","Value","Units","Min Limit","Max Limit"
+"DRNAREA","Drainage Area","5.82","square miles","0.1","1000"
+
+Maximum Probable Flood Statistics Flow Report,100.0 Percent Crippen Bue Region 16
+"Statistic","Value","Unit"
+"Maximum Flood Crippen Bue Regional","41300","ft^3/s"
+
+"USGS Data Disclaimer: Unless otherwise stated, all data, metadata and related materials are considered to satisfy the quality standards relative to the purpose for which the data were collected. Although these data and associated metadata have been reviewed for accuracy and completeness and approved for release by the U.S. Geological Survey (USGS), no warranty expressed or implied is made regarding the display or utility of the data for other purposes, nor on all computer systems, nor shall the act of distribution constitute any such warranty."
+"USGS Software Disclaimer: This software has been approved for release by the U.S. Geological Survey (USGS). Although the software has been subjected to rigorous review, the USGS reserves the right to update the software as needed pursuant to further analysis and review. No warranty, expressed or implied, is made by the USGS or the U.S. Government as to the functionality of the software and related material nor shall the fact of release constitute any such warranty. Furthermore, the software is released on condition that neither the USGS nor the U.S. Government shall be held liable for any damages resulting from its authorized or unauthorized use."
+"USGS Product Names Disclaimer: Any use of trade, firm, or product names is for descriptive purposes only and does not imply endorsement by the U.S. Government."
+
+Application Version: 4.40.2
+SSHydro Services Version: version number unavailable
+SSDelineate Services Version: 1.2.0
+NSS Services Version: 2.6.0
+GageStats Services Version: 1.2.1
+Pourpoint Services Version: 1.2.2
+Batch Processor Services Version: 1.6.2
