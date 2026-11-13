@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: "basemap | radar | model | all"
+        description: "basemap | radar | model | soil | all"
         default: "all"
       model_event:
         description: "model event key in config/model.json"
@@ -56,6 +56,16 @@ jobs:
       - name: Flood model
         if: env.TASK == 'model' || env.TASK == 'all'
         run: python scripts/run_model.py --event "$MODEL_EVENT" --preflight
+      - name: Soil moisture check (NASA SMAP L4)
+        if: env.TASK == 'soil' || env.TASK == 'all'
+        env:
+          EARTHDATA_USER: ${{ secrets.Earthdata_user }}
+          EARTHDATA_PASS: ${{ secrets.Earthdata_pass }}
+        run: |
+          pip install h5py
+          for ev in $(python -c "import json;print(' '.join(e['id'] for e in json.load(open('config/basins.json'))['events']))"); do
+            python scripts/run_soil.py --event "$ev"
+          done
       - name: Commit outputs
         if: always()
         run: |

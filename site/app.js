@@ -123,6 +123,8 @@
         try { S.models[k] = await getJSON(S.base + "model/" + v.path); S.models[k]._dir = S.base + "model/" + k + "/"; } catch (e) { /* ignore */ }
       }));
     } catch (e) { /* model not run for this event */ }
+    S.soil = null;
+    try { S.soil = await getJSON(S.base + "soil.json"); } catch (e) { /* no SMAP check yet */ }
     const g = meta.grid; canvas.width = g.nx; canvas.height = g.ny;
     radarOverlay.setBounds([[g.lat0 - (g.ny - 1) * g.d - g.d / 2, g.lon0 - g.d / 2], [g.lat0 + g.d / 2, g.lon0 + (g.nx - 1) * g.d + g.d / 2]]);
     $("evinfo").textContent = `${tmst(meta.start_utc)} – ${tmst(meta.end_utc)} · ${meta.steps_utc.length} × ${meta.step_min}-min steps · updated ${tmst(meta.generated_utc)}`;
@@ -274,6 +276,16 @@
       } else {
         h += `<div class="note">The flood model hasn't run for this event yet. It runs in the site's GitHub job (terrain, soils, land cover and NOAA Atlas 14 are fetched there). Radar results below are final.</div>`;
       }
+      const SB = S.soil && S.soil.basins && S.soil.basins[b.id];
+      if (SB && SB.at_start) {
+        const a = SB.at_start, pc = (x) => (x == null ? "–" : Math.round(x * 100) + "%");
+        h += `<h3>Soil moisture at storm start (check)</h3><div class="head" style="border-left-color:${col}">
+          <div class="big">Root zone ${pc(a.rootzone_wetness)} of saturation</div>
+          <div>${SB.rootzone_percentile != null ? `${SB.relative} for the date: ${ordinal(SB.rootzone_percentile)} percentile of ${SB.climatology.length} earlier years (range ${pc(SB.clim_min_median_max[0])}–${pc(SB.clim_min_median_max[2])}, median ${pc(SB.clim_min_median_max[1])})` : "No climatology yet"}</div>
+          <div class="muted">Surface ${pc(a.surface_wetness)} · profile ${pc(a.profile_wetness)}${a.snow_mass_kgm2 > 1 ? ` · snow ${a.snow_mass_kgm2.toFixed(0)} kg/m²` : ""} · ${S.soil.product} ${S.soil.version ? "v" + S.soil.version : ""}, granule ${tmst(a.granule_start_utc)}</div></div>
+          ${SB.series.length ? `<details><summary>Prior ${SB.series.length} readings</summary><table class="t"><tr><th>Date</th><th>Root zone</th><th>Surface</th></tr>${SB.series.map((r) => `<tr><td>${fmtShort.format(new Date(r.t_utc))}</td><td>${pc(r.rootzone_wetness)}</td><td>${pc(r.surface_wetness)}</td></tr>`).join("")}</table></details>` : ""}
+          <div class="muted">Shown beside the model's dry/normal/wet band; it does not change the headline.</div>`;
+      }
       if (b.channel) {
         const c = b.channel;
         h += `<h3>Channel</h3><div class="muted"><b>${c.name}</b> — ${c.design_storm}; design ${Object.entries(c.design_flows_cfs).map(([kk, v]) => `${fN(v)} cfs ${kk}`).join(", ")}. ${c.note} <i>Source: ${c.source}.</i></div>`;
@@ -302,6 +314,7 @@
     side.querySelectorAll("[data-txt]").forEach((bt) => bt.onclick = () => { const M = S.models[bt.dataset.txt];
       modal(`<pre style="white-space:pre-wrap;font-size:11.5px">${(M.summary_text || "").replace(/[<&]/g, (c) => ({ "<": "&lt;", "&": "&amp;" }[c]))}</pre>`); });
   }
+  function ordinal(n) { const s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
   function modal(html) { $("mbody").innerHTML = html; $("modal").hidden = false; }
   $("mclose").onclick = () => { $("modal").hidden = true; };
   $("modal").onclick = (e) => { if (e.target.id === "modal") $("modal").hidden = true; };
