@@ -91,7 +91,7 @@
     const first = liveOK ? live["USGS Topo"] : (bases["Topo (offline)"] || grid);
     first.addTo(map);
     layerCtl = L.control.layers(bases, {}, { position: "topright", collapsed: true }).addTo(map);
-    radarOverlay = L.imageOverlay(canvas.toDataURL(), [[0, 0], [0, 0]], { opacity: 0.7, className: "pix", interactive: false }).addTo(map);
+    radarOverlay = L.imageOverlay(canvas.toDataURL(), [[0, 0], [0, 0]], { opacity: 0.55, className: "pix", interactive: false }).addTo(map);
   }
   function probe(url) {
     return new Promise((res) => { const im = new Image(); const t = setTimeout(() => res(false), 3500);
