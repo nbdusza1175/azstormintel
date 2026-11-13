@@ -236,7 +236,7 @@
       const durs = ["5", "15", "30", "60", "120", "180", "360", "720", "1440", "2880", "4320"].filter((d) => s.durations[d]);
       const lab = (d) => (+d < 60 ? d + " min" : +d / 60 + " hr");
       let h = `<h2><span class="dot" style="background:${col}"></span>${b.name}</h2>
-        <div class="meta">${s.area_sqmi} sq mi in ${s.n_cells} radar cells${b.published_area_sqmi ? " · published " + Object.entries(b.published_area_sqmi).map(([kk, v]) => `${kk.replace(/_/g, " ")} ${v}`).join(", ") : ""}</div>
+        <div class="meta">${s.area_sqmi} sq mi in ${s.n_cells} radar cells${b.published_area_sqmi ? " · published " + Object.entries(b.published_area_sqmi).map(([kk, v]) => `${kk} ${v}`).join(", ") + " sq mi" : ""}</div>
         <div class="stats">
           <div class="stat"><div class="v">${f2(s.total_in)} in</div><div class="l">Storm total, basin avg (max cell ${f2(s.max_cell_total_in)})</div></div>
           <div class="stat"><div class="v">${f2(s.peak_5min_inhr)}</div><div class="l">Peak 5-min in/hr, basin avg · ${fmtShort.format(new Date(s.peak_5min_utc))}</div></div>

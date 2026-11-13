@@ -16,7 +16,7 @@ def parse_streamstats(path: str):
     region = None
     rows = []
     for i, l in enumerate(lines):
-        if l.startswith('"DRNAREA"') and area is None:
+        if (l.startswith('"DRNAREA"') or l.startswith('"CONTDA"')) and area is None:
             area = float(next(csv.reader([l]))[2])
         if l.startswith("Peak-Flow Statistics Flow Report"):
             region = l.split(",", 1)[1].strip()

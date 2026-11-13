@@ -7,7 +7,7 @@
       "name": "Fort Valley",
       "polygon": "data/basins/fort_valley.geojson",
       "outlet": [-111.71270813324433, 35.256205933214396],
-      "published_area_sqmi": null,
+      "published_area_sqmi": {"StreamStats": 29.0},
       "rain_gauges": [
         {"id": "3406", "name": "Rio de Flag @ Snowbowl Rd", "lat": 35.256764, "lon": -111.719223, "tz": "UTC"}
       ],
@@ -25,7 +25,7 @@
       "name": "Mountain Dell (Sinclair Wash)",
       "polygon": "data/basins/mountain_dell.geojson",
       "outlet": [-111.67939671066742, 35.16402356935214],
-      "published_area_sqmi": {"usgs_09400650": 8.11, "iea_flo2d": 8.8},
+      "published_area_sqmi": {"USGS 09400650": 8.11, "IEA FLO-2D": 8.8, "StreamStats (upstream pour point)": 5.82},
       "rain_gauges": [
         {"id": "MtDell", "name": "Mt Dell Sinclair Wash", "lat": 35.161626, "lon": -111.700024, "tz": "UTC"}
       ],
