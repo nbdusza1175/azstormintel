@@ -3,7 +3,7 @@
   python scripts/run_event.py --event 2026-10-30            # an event from config/basins.json
   python scripts/run_event.py --live --hours 72             # rolling window ending now
 
-Writes site/data/<events/ID | live>/: meta.json, dbz.bin, int.bin, logs/*.csv.gz
+Writes site/data/<events/ID | live>/: meta.json, frames.json (base64 gzip uint8 frames), logs/*.csv.gz
 """
 from __future__ import annotations
 
@@ -128,8 +128,15 @@ def main():
                         + [t["above_sqmi"][str(th)][s] for th in radar.THRESH]
                         + [t["snow_pct"][s], "" if t["dbz_max"][s] is None else t["dbz_max"][s]]) + "\n")
 
-    enc_dbz(R["dbz"]).tofile(os.path.join(out_dir, "dbz.bin"))
-    enc_int(R["inten"]).tofile(os.path.join(out_dir, "int.bin"))
+    import base64
+    frames = {k: base64.b64encode(gzip.compress(a.tobytes(), 9)).decode()
+              for k, a in (("dbz", enc_dbz(R["dbz"])), ("int", enc_int(R["inten"])))}
+    frames["shape"] = [len(R["ends"]), g.shape[0], g.shape[1]]
+    frames["encoding"] = "base64(gzip(uint8[n, ny, nx]))"
+    json.dump(frames, open(os.path.join(out_dir, "frames.json"), "w"))
+    for old in ("dbz.bin", "int.bin"):
+        if os.path.exists(os.path.join(out_dir, old)):
+            os.remove(os.path.join(out_dir, old))
     meta = {
         "version": cfg["version"], "event": ev, "generated_utc": datetime.now(timezone.utc).isoformat(),
         "start_utc": start.isoformat(), "end_utc": end.isoformat(), "step_min": R["step_min"],

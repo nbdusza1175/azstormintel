@@ -59,7 +59,11 @@
   const canvas = document.createElement("canvas");
 
   async function getJSON(u) { const r = await fetch(u, { cache: "no-cache" }); if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }
-  async function getBin(u) { const r = await fetch(u, { cache: "no-cache" }); if (!r.ok) throw new Error(u + " " + r.status); return new Uint8Array(await r.arrayBuffer()); }
+  async function unpack(b64) {          // base64(gzip(bytes)) -> Uint8Array
+    const raw = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    const ds = new Blob([raw]).stream().pipeThrough(new DecompressionStream("gzip"));
+    return new Uint8Array(await new Response(ds).arrayBuffer());
+  }
 
   // ---- map -----------------------------------------------------------------
   async function initMap() {
@@ -109,7 +113,8 @@
     stop();
     $("side").innerHTML = '<div class="loading">Loading ' + ev.name + "…</div>";
     S.base = "data/" + ev.path.replace(/^data\//, "") + "/";
-    const [meta, dbz, int] = await Promise.all([getJSON(S.base + "meta.json"), getBin(S.base + "dbz.bin"), getBin(S.base + "int.bin")]);
+    const [meta, fr] = await Promise.all([getJSON(S.base + "meta.json"), getJSON(S.base + "frames.json")]);
+    const [dbz, int] = await Promise.all([unpack(fr.dbz), unpack(fr.int)]);
     S.meta = meta; S.dbz = dbz; S.int = int;
     S.models = {};
     try {
