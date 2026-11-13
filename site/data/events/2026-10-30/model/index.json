@@ -1,0 +1,19 @@
+{
+ "basins": {
+  "fort_valley": {
+   "ok": true,
+   "path": "fort_valley/summary.json",
+   "run_utc": "2026-11-13T22:01:37.477572+00:00",
+   "version": "3.3.0"
+  },
+  "mountain_dell": {
+   "ok": true,
+   "path": "mountain_dell/summary.json",
+   "run_utc": "2026-11-13T22:01:37.477586+00:00",
+   "version": "3.3.0"
+  }
+ },
+ "model_event": "oct30_nov2_2026",
+ "label": "Oct 30 - Nov 2, 2026 storm",
+ "version": "3.3.0"
+}

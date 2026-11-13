@@ -1,0 +1,51 @@
+name: Deploy site
+# Publishes site/ to GitHub Pages with a fresh "live" radar window (not committed).
+on:
+  push:
+    branches: [main]
+    paths: ["site/**"]
+  workflow_run:
+    workflows: ["Build data"]
+    types: [completed]
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: .cache/mrms
+          key: live-mrms-${{ github.run_id }}
+          restore-keys: live-mrms-
+      - name: Live radar window (last 24 h)
+        continue-on-error: true
+        run: |
+          python scripts/run_event.py --live --hours 24
+          find .cache/mrms -type f -mmin +1800 -delete || true
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
