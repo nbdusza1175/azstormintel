@@ -1,0 +1,15 @@
+{
+ "layers": [
+  "topo",
+  "imagery"
+ ],
+ "min_zoom": 9,
+ "max_zoom": 14,
+ "bbox": [
+  -112.02,
+  34.98,
+  -111.48,
+  35.42
+ ],
+ "attribution": "USGS The National Map"
+}
