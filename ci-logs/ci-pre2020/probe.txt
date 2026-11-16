@@ -1,8 +1,0 @@
-== IEM 2018/07/27
-href="GaugeCorr_QPE_01H/" href="GaugeCorr_QPE_24H/" href="GaugeCorr_QPE_72H/" href="PrecipFlag/" href="PrecipRate/" href="RadarOnly_QPE_01H/" href="RadarOnly_QPE_24H/" href="RadarOnly_QPE_72H/" href="RadarQualityIndex/" href="RotationTrack1440min/" href="SeamlessHSR/" 
-== IEM 2016/01/15
-href="GaugeCorr_QPE_01H/" href="PrecipRate/" href="RadarOnly_QPE_01H/" href="RadarOnly_QPE_24H/" href="SeamlessHSR/" 
-== IEM 2019/09/01
-href="FLASH/" href="GaugeCorr_QPE_01H/" href="GaugeCorr_QPE_24H/" href="GaugeCorr_QPE_72H/" href="MESH/" href="PrecipFlag/" href="PrecipRate/" href="RadarOnly_QPE_01H/" href="RadarOnly_QPE_24H/" href="RadarOnly_QPE_72H/" href="RadarQualityIndex/" href="RotationTrack1440min/" href="SeamlessHSR/" 
-== MRLC annual NLCD coverages
-

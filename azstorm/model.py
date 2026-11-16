@@ -650,59 +650,50 @@ def _fetch_mrlc_wms(grid, layer):
     return cls
 
 
-def annual_nlcd_ids(ctx):
-    """{year: (landcover_id, impervious_id)} from the MRLC WCS capabilities (Annual NLCD, 1985 on).
-    Cached for the run. {} if the listing fails."""
-    if "_annual_nlcd" in ctx:
-        return ctx["_annual_nlcd"]
-    out = {}
-    try:
-        raw = http_get("https://www.mrlc.gov/geoserver/mrlc_download/wcs",
-                       dict(service="WCS", version="2.0.1", request="GetCapabilities"), timeout=120, binary=False)
-        txt = raw if isinstance(raw, str) else raw.decode("utf-8", "ignore")
-        ids = set(re.findall(r"<wcs:CoverageId>([^<]+)</wcs:CoverageId>", txt))
-        lcs, ims = {}, {}
-        for i in ids:
-            m = re.search(r"Annual_NLCD_LndCov_(\d{4})_CU", i)
-            if m:
-                lcs[int(m.group(1))] = max(lcs.get(int(m.group(1)), ""), i)
-            m = re.search(r"Annual_NLCD_FctImp_(\d{4})_CU", i)
-            if m:
-                ims[int(m.group(1))] = max(ims.get(int(m.group(1)), ""), i)
-        out = {y: (lcs[y], ims.get(y)) for y in lcs}
-        log(f"  Annual NLCD on MRLC WCS: {min(out) if out else '-'}-{max(out) if out else '-'} ({len(out)} years)")
-    except Exception as e:
-        log(f"  Annual NLCD listing failed ({e}); using the fixed NLCD layers")
-    ctx["_annual_nlcd"] = out
-    return out
+ANNUAL_NLCD_COG = ("https://data.source.coop/kylebarron/usgs-landcover/annual-nlcd/c1/v1/cu/mosaic/"
+                   "Annual_NLCD_{p}_{y}_CU_C1V1.tif")
+
+
+def _fetch_annual_cog(grid, product, year, url_fmt=None):
+    """Window of an Annual NLCD CONUS mosaic COG (EPSG:5070, 30 m) warped to grid. product: LndCov | FctImp."""
+    import rasterio
+    from rasterio.windows import from_bounds
+    url = (url_fmt or ANNUAL_NLCD_COG).format(p=product, y=year)
+    tr = transformer(grid.crs, "EPSG:5070")
+    xmin, ymin, xmax, ymax = grid.bounds
+    xs, ys = tr.transform([xmin, xmin, xmax, xmax], [ymin, ymax, ymin, ymax])
+    with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", CPL_VSIL_CURL_ALLOWED_EXTENSIONS=".tif"):
+        with rasterio.open("/vsicurl/" + url) as ds:
+            w = from_bounds(min(xs) - 120, min(ys) - 120, max(xs) + 120, max(ys) + 120, ds.transform).round_offsets().round_lengths()
+            a = ds.read(1, window=w)
+            return warp_to_grid(a, ds.window_transform(w), ds.crs, grid, nearest=True,
+                                nodata=ds.nodata if ds.nodata is not None else 250)
 
 
 def get_landcover(grid, bcfg, ctx):
     """NLCD class + impervious fraction on grid. Order: local tif > Annual NLCD for the event year
-    (MRLC WCS) > fixed NLCD WCS > WMS > default."""
+    (COG mosaics) > fixed NLCD 2021 WCS > WMS > default."""
     lc = ctx["cfg"]["common"]["landcover"]
     cls, imp, src = None, None, ""
     yr = ctx.get("event_year")
-    if cls is None and lc.get("annual", False) and yr and not find_file(ctx["base"], bcfg.get("nlcd_tif")):
-        ids = annual_nlcd_ids(ctx)
-        ys = [y for y in ids if y <= yr] or sorted(ids)[:1]
-        if ys:
-            y = max(ys)
+    if lc.get("annual", False) and yr and not find_file(ctx["base"], bcfg.get("nlcd_tif")):
+        # latest Annual NLCD year on or before the event (Collection 1.1 covers 1985-2024)
+        for y in range(min(yr, lc.get("annual_last_year", 2024)), 1984, -1):
             try:
-                cls = _fetch_mrlc_wcs(grid, ids[y][0]).astype(int)
-                src = f"Annual NLCD {y} land cover (MRLC WCS {ids[y][0]})" + ("" if y == yr else f"; latest year on or before the {yr} event")
-                if ids[y][1]:
-                    try:
-                        imp = _fetch_mrlc_wcs(grid, ids[y][1]).astype(float)
-                        src += f"; impervious Annual NLCD {y}"
-                    except Exception as e:
-                        log(f"  Annual NLCD impervious failed ({e})")
+                cls = _fetch_annual_cog(grid, "LndCov", y, lc.get("annual_cog")).astype(int)
             except Exception as e:
-                log(f"  Annual NLCD {y} failed ({e}); trying fixed NLCD")
-                cls = None
-    p = find_file(ctx["base"], bcfg.get("nlcd_tif"))
-    if p:
-        cls, src = read_tif_to_grid(p, grid).astype(int), f"local {os.path.basename(p)}"
+                log(f"  Annual NLCD {y} land cover not available ({str(e)[:120]})")
+                if y < yr - 3:
+                    break
+                continue
+            src = f"Annual NLCD {y} land cover, Collection 1.1 (USGS; COG mirror on source.coop)" + \
+                ("" if y == yr else f" - latest year on or before the {yr} event")
+            try:
+                imp = _fetch_annual_cog(grid, "FctImp", y, lc.get("annual_cog")).astype(float)
+                src += f"; impervious: Annual NLCD {y} fractional impervious"
+            except Exception as e:
+                log(f"  Annual NLCD {y} impervious failed ({str(e)[:120]})")
+            break
     if cls is None:
         try:
             cls, src = _fetch_mrlc_wcs(grid, lc["wcs_landcover"]).astype(int), "MRLC WCS " + lc["wcs_landcover"]
@@ -718,7 +709,7 @@ def get_landcover(grid, bcfg, ctx):
     p = find_file(ctx["base"], bcfg.get("impervious_tif"))
     if p:
         imp = read_tif_to_grid(p, grid).astype(float)
-    if imp is None and not src.startswith("Annual"):
+    if imp is None and not src.startswith("Annual"):  # keep land cover and impervious from the same source
         try:
             imp = _fetch_mrlc_wcs(grid, lc["wcs_impervious"]).astype(float)
         except Exception as e:
