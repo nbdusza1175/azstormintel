@@ -1,0 +1,9 @@
+{
+  "note": "Limits for on-demand runs. The Worker (worker/src/index.js) enforces the same values; keep them in step.",
+  "back_years": 10,
+  "max_days": 7,
+  "min_hours": 1,
+  "latency_min": 20,
+  "max_concurrent_runs": 3,
+  "runs_keep_days": 45
+}

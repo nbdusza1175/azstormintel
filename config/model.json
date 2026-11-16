@@ -1,5 +1,5 @@
 {
-  "version": "3.3.0",
+  "version": "3.4.0",
   "method": "ModClark: distributed SCS-CN losses + D8 time-area translation (channel velocity at the routed discharge) + Clark linear reservoir (regional R). Gauges are checks only.",
   "common": {
     "crs": "EPSG:26912",
@@ -103,7 +103,11 @@
       "wcs_landcover": "mrlc_download__NLCD_2021_Land_Cover_L48",
       "wcs_impervious": "mrlc_download__NLCD_2021_Impervious_L48",
       "wms_landcover": "NLCD_2021_Land_Cover_L48",
-      "default_class": 42
+      "default_class": 42,
+      "annual": true,
+      "annual_note": "Land cover + impervious from the Annual NLCD year of the event (latest on or before it; C1.1 covers 1985-2024). USGS public-domain COG mosaics mirrored on source.coop (the USGS bucket is requester-pays). Falls back to the fixed NLCD 2021 layers on MRLC.",
+      "annual_last_year": 2024,
+      "annual_cog": "https://data.source.coop/kylebarron/usgs-landcover/annual-nlcd/c1/v1/cu/mosaic/Annual_NLCD_{p}_{y}_CU_C1V1.tif"
     },
     "checks": {
       "rain_total_pct": 25,

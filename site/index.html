@@ -18,6 +18,7 @@
       <label for="event">Event</label>
       <select id="event"></select>
       <span id="evinfo" class="muted"></span>
+      <button id="newRun" class="primary" type="button">New analysis…</button>
     </div>
   </header>
 
@@ -56,9 +57,11 @@
       <div class="tip" id="tip" hidden></div>
     </div>
   </section>
+  <div class="modal" id="modal" hidden><div class="mbox"><button class="mclose" id="mclose" aria-label="Close">×</button><div id="mbody"></div></div></div>
 </div>
-<div class="modal" id="modal" hidden><div class="mbox"><button class="mclose" id="mclose" aria-label="Close">×</button><div id="mbody"></div></div></div>
 <script src="vendor/leaflet/leaflet.js"></script>
+<script src="config.js"></script>
+<script src="runs.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

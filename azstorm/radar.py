@@ -91,8 +91,13 @@ def build(start_utc: datetime, end_utc: datetime, bbox, cache_dir=None, step_min
            [k for k in set(dbz_pick) if k] + [k for k in set(flag_pick) if k]
     log(f"reading {len(need)} files")
     data = mrms.read_many(need, bbox, cache_dir)
-    grid = next(iter(data.values()))[0]
+    if not data:
+        raise RuntimeError("No MRMS radar files could be read for this window (archive gap or outage).")
+    # use the rain products' grid; drop any file on a different grid (pre-v12 products can differ)
+    ref = next((data[k] for _, k in p2_keys + pr_keys if k in data), next(iter(data.values())))
+    grid = ref[0]
     shp = grid.shape
+    data = {k: v for k, v in data.items() if v[1].shape == shp}
 
     # --- PrecipRate -> minute rates -> 5-min depth (mm)
     pr = [(ts, data[k][1]) for ts, k in pr_keys if k in data]
@@ -163,6 +168,9 @@ def build(start_utc: datetime, end_utc: datetime, bbox, cache_dir=None, step_min
         "steps_with_missing_minutes": int((minutes_missing > 0).sum()),
         "reflectivity_frames_missing": int(sum(1 for k in dbz_pick if not k or k not in data)),
         "cells_factor_clipped": n_clipped, "cells_even_spread": n_spread,
+        "archive": sorted({mrms.source_for(e) for e in ends}),
+        "pass2_product": sorted({(k.rsplit("/", 2)[-2] if k.startswith("http") else k.split("/")[1])
+                                 for _, k in p2_keys}) or None,
     }
     return {"grid": grid, "ends": ends, "step_min": step_min, "depth_in": depth_in, "inten": inten,
             "dbz": dbz, "snow": snow, "hours": hours, "qa": qa, "minutes_missing": minutes_missing}

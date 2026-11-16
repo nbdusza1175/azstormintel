@@ -103,3 +103,27 @@ details summary { cursor: pointer; font-weight: 600; font-size: 12px; color: var
   .legend { display: none; }
 }
 [hidden] { display: none !important; }
+
+/* ---- on-demand analyses (runs.js) ---- */
+button.primary { font: inherit; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid var(--accent);
+  background: var(--accent); color: #fff; cursor: pointer; }
+button.primary:disabled { opacity: .6; cursor: default; }
+.runform { display: grid; gap: 8px; margin-top: 8px; }
+.runform .frow { display: grid; grid-template-columns: 70px 1fr; gap: 8px; align-items: center; border: 0; padding: 0; margin: 0; }
+.runform fieldset.frow { display: block; }
+.runform legend { font-weight: 600; margin-bottom: 4px; }
+.runform input[type=datetime-local] { font: inherit; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface-1); color: var(--text-primary); max-width: 240px; }
+.runform #rBasins { display: flex; flex-direction: column; gap: 4px; }
+.runform .quick { display: flex; gap: 6px; flex-wrap: wrap; }
+.runform .factions { display: flex; justify-content: flex-end; }
+.small { font-size: 11.5px; }
+.runcard .chead2 { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
+.steps { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 5px; }
+.steps li { display: flex; gap: 8px; align-items: center; color: var(--text-muted); }
+.steps li.in_progress { color: var(--text-primary); font-weight: 600; }
+.steps li.completed { color: var(--text-secondary); }
+.steps li.failure .ic { color: var(--crit); }
+.steps .ic { width: 14px; text-align: center; }
+.steps li.in_progress .ic { color: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .3; } }

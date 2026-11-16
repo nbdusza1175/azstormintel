@@ -41,7 +41,7 @@ from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import pandas as pd
 
-VERSION = "3.3.0"
+VERSION = "3.4.0"
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
@@ -650,13 +650,50 @@ def _fetch_mrlc_wms(grid, layer):
     return cls
 
 
+ANNUAL_NLCD_COG = ("https://data.source.coop/kylebarron/usgs-landcover/annual-nlcd/c1/v1/cu/mosaic/"
+                   "Annual_NLCD_{p}_{y}_CU_C1V1.tif")
+
+
+def _fetch_annual_cog(grid, product, year, url_fmt=None):
+    """Window of an Annual NLCD CONUS mosaic COG (EPSG:5070, 30 m) warped to grid. product: LndCov | FctImp."""
+    import rasterio
+    from rasterio.windows import from_bounds
+    url = (url_fmt or ANNUAL_NLCD_COG).format(p=product, y=year)
+    tr = transformer(grid.crs, "EPSG:5070")
+    xmin, ymin, xmax, ymax = grid.bounds
+    xs, ys = tr.transform([xmin, xmin, xmax, xmax], [ymin, ymax, ymin, ymax])
+    with rasterio.Env(GDAL_DISABLE_READDIR_ON_OPEN="EMPTY_DIR", CPL_VSIL_CURL_ALLOWED_EXTENSIONS=".tif"):
+        with rasterio.open("/vsicurl/" + url) as ds:
+            w = from_bounds(min(xs) - 120, min(ys) - 120, max(xs) + 120, max(ys) + 120, ds.transform).round_offsets().round_lengths()
+            a = ds.read(1, window=w)
+            return warp_to_grid(a, ds.window_transform(w), ds.crs, grid, nearest=True,
+                                nodata=ds.nodata if ds.nodata is not None else 250)
+
+
 def get_landcover(grid, bcfg, ctx):
-    """NLCD class + impervious fraction on grid. Order: local tif > MRLC WCS > MRLC WMS > default."""
+    """NLCD class + impervious fraction on grid. Order: local tif > Annual NLCD for the event year
+    (COG mosaics) > fixed NLCD 2021 WCS > WMS > default."""
     lc = ctx["cfg"]["common"]["landcover"]
     cls, imp, src = None, None, ""
-    p = find_file(ctx["base"], bcfg.get("nlcd_tif"))
-    if p:
-        cls, src = read_tif_to_grid(p, grid).astype(int), f"local {os.path.basename(p)}"
+    yr = ctx.get("event_year")
+    if lc.get("annual", False) and yr and not find_file(ctx["base"], bcfg.get("nlcd_tif")):
+        # latest Annual NLCD year on or before the event (Collection 1.1 covers 1985-2024)
+        for y in range(min(yr, lc.get("annual_last_year", 2024)), 1984, -1):
+            try:
+                cls = _fetch_annual_cog(grid, "LndCov", y, lc.get("annual_cog")).astype(int)
+            except Exception as e:
+                log(f"  Annual NLCD {y} land cover not available ({str(e)[:120]})")
+                if y < yr - 3:
+                    break
+                continue
+            src = f"Annual NLCD {y} land cover, Collection 1.1 (USGS; COG mirror on source.coop)" + \
+                ("" if y == yr else f" - latest year on or before the {yr} event")
+            try:
+                imp = _fetch_annual_cog(grid, "FctImp", y, lc.get("annual_cog")).astype(float)
+                src += f"; impervious: Annual NLCD {y} fractional impervious"
+            except Exception as e:
+                log(f"  Annual NLCD {y} impervious failed ({str(e)[:120]})")
+            break
     if cls is None:
         try:
             cls, src = _fetch_mrlc_wcs(grid, lc["wcs_landcover"]).astype(int), "MRLC WCS " + lc["wcs_landcover"]
@@ -672,7 +709,7 @@ def get_landcover(grid, bcfg, ctx):
     p = find_file(ctx["base"], bcfg.get("impervious_tif"))
     if p:
         imp = read_tif_to_grid(p, grid).astype(float)
-    if imp is None:
+    if imp is None and not src.startswith("Annual"):  # keep land cover and impervious from the same source
         try:
             imp = _fetch_mrlc_wcs(grid, lc["wcs_impervious"]).astype(float)
         except Exception as e:
@@ -833,11 +870,22 @@ class Window:
 
 
 def _mrms_urls(product, t):
+    """Candidate URLs for one MRMS file. AWS (from 2020-10-14) first; IEM mtarchive (pre-v12 names
+    such as GaugeCorr_QPE_01H) first for older dates."""
+    try:
+        from .mrms import AWS_START, IEM_ALIASES
+    except ImportError:  # standalone use of this module
+        AWS_START, IEM_ALIASES = pd.Timestamp("2020-10-14", tz="UTC"), {}
     d = t.strftime("%Y%m%d")
     hms = t.strftime("%H%M%S")
     pn = product.replace("_00.00", "")
-    return [MRMS_AWS.format(p=product, d=d, hms=hms),
-            MRMS_IEM.format(Y=t.strftime("%Y"), m=t.strftime("%m"), dd=t.strftime("%d"), pn=pn, p=product, d=d, hms=hms)]
+    lvl = product[len(pn) + 1:] if product != pn else "00.00"
+    ymd = dict(Y=t.strftime("%Y"), m=t.strftime("%m"), dd=t.strftime("%d"), d=d, hms=hms)
+    aws = [MRMS_AWS.format(p=product, d=d, hms=hms)]
+    iem = [MRMS_IEM.format(pn=a, p=f"{a}_{lvl}", **ymd) for a in IEM_ALIASES.get(product, [pn])]
+    old = pd.Timestamp(t).tz_convert("UTC") < pd.Timestamp(AWS_START) if pd.Timestamp(t).tzinfo else \
+        pd.Timestamp(t).tz_localize("UTC") < pd.Timestamp(AWS_START)
+    return iem + aws if old else aws + iem
 
 
 def decode_grib_window(raw, win):
@@ -1770,7 +1818,7 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
     ctx = ctx or {}
     ctx.setdefault("cache", os.path.join(base, "cache"))
     os.makedirs(ctx["cache"], exist_ok=True)
-    ctx.update(cfg=cfg, base=base)
+    ctx.update(cfg=cfg, base=base, event_year=int(ev["t0"].tz_convert(ev["tz"]).year))
     outdir = os.path.join(outroot, key)
     os.makedirs(outdir, exist_ok=True)
     flags, sources = [], {}
@@ -1881,6 +1929,9 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
     times_h = hour_range(ev["t0"], ev["t1"])
     Ph, miss_h = get_mrms(mr["pass2_01h"], times_h, win, ctx)
     sources["Radar"] = "MRMS MultiSensor QPE Pass 2 01H (1 km)"
+    if ev["t0"] < pd.Timestamp("2020-10-14", tz="UTC"):
+        sources["Radar"] = ("MRMS gauge-corrected hourly QPE (pre-v12 GaugeCorr_QPE_01H, via Iowa Environmental "
+                            "Mesonet archive; MultiSensor Pass 2 began Oct 2020) (1 km)")
     if miss_h.any():
         flags.append(f"{int(miss_h.sum())} of {len(times_h)} MRMS Pass 2 hours missing (treated as 0).")
     Ph = np.nan_to_num(Ph)
@@ -2023,12 +2074,15 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
 
     # ---- 7. storm intensity ----------------------------------------------------
     st = []
+    tcrec = None
     nat_hr = step_native / 60
     for D in list(bc["durations_hr"]) + ["Tc"]:
         Dh = max(Tc, nat_hr) if D == "Tc" else float(D)
         n = int(round(Dh / nat_hr))
         if abs(n * nat_hr - Dh) > 1e-6 and D != "Tc":
             continue
+        if D == "Tc" and n > len(basin_native):
+            n = max(1, len(basin_native))  # window shorter than Tc: whole-window depth
         dep, kend = max_running(basin_native, n)
         if not np.isfinite(dep):
             continue
@@ -2044,7 +2098,9 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
             st.append(rec)
     def tkey(d):
         return (d["T"] if np.isfinite(d["T"]) else 0) + (0.001 if d["q"] == ">" else 0) - (0.5 if d["q"] == "<" else 0)
-    ctrl = max(st, key=tkey)
+    if tcrec is None:
+        flags.append("Storm window is shorter than Tc; the Tc-duration intensity could not be computed.")
+    ctrl = max(st, key=tkey) if st else tcrec
     storm = dict(durations=st, tc_duration=tcrec, controlling=ctrl, total_in=total,
                  max_1hr_in=float(basin_hourly.max()), resolution=rain_res,
                  headline=f"~{fmt_T(ctrl['T'], ctrl['q'])} storm at {ctrl['label']} ({ctrl['depth_in']:.2f} in)",
@@ -2053,11 +2109,11 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
         storm["pass2_vs_radaronly"] = total / ro_total if ro_total > 0 else None
 
     # ---- 8. cross-checks ---------------------------------------------------------
-    i_tc = tcrec["intensity_inhr"]
+    i_tc = tcrec["intensity_inhr"] if tcrec else float("nan")
     kb = bc["fcdmc_tc"]["Kb"]
     tcf = Tc
     for _ in range(30):
-        n = max(1, int(round(tcf / nat_hr)))
+        n = min(max(1, int(round(tcf / nat_hr))), max(1, len(basin_native)))
         dep, _k = max_running(basin_native, n)
         i_ = max(dep / (n * nat_hr), 0.01)
         tcf_new = 11.4 * L_long_mi ** 0.5 * kb ** 0.52 * max(S_long_ftmi, 1) ** -0.31 * i_ ** -0.38
@@ -2349,8 +2405,12 @@ def preflight(config="basins.json"):
     return ok
 
 
-def run_event(basin_keys, event_key, config="basins.json", outroot="outputs", cache=None):
+def run_event(basin_keys, event_key, config="basins.json", outroot="outputs", cache=None, event=None):
+    """Run basins for an event. `event` (dict with start_local/end_local[/tz/label]) defines an
+    ad-hoc event under `event_key` without editing the config file (used by on-demand runs)."""
     cfg = load_config(config)
+    if event is not None:
+        cfg.setdefault("events", {})[event_key] = event
     if basin_keys in (None, "all"):
         basin_keys = list(cfg["basins"].keys())
     exts = []

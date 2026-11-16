@@ -22,6 +22,21 @@ BUCKET = "https://noaa-mrms-pds.s3.amazonaws.com"
 NS = {"s3": "http://s3.amazonaws.com/doc/2006-03-01/"}
 TS_RE = re.compile(r"_(\d{8})-(\d{6})\.grib2\.gz$")
 
+# AWS OpenData holds MRMS from 2020-10-14. Earlier dates (back to Oct 2014) come from the
+# Iowa Environmental Mesonet mtarchive, which kept a subset of products under their pre-v12 names.
+AWS_START = datetime(2020, 10, 14, tzinfo=timezone.utc)
+IEM_ROOT = "https://mtarchive.geol.iastate.edu"
+IEM_ALIASES = {  # AWS product -> IEM directory names to try, in order (gauge-corrected = pre-v12 "Pass 2")
+    "PrecipRate_00.00": ["PrecipRate"],
+    "MultiSensor_QPE_01H_Pass2_00.00": ["MultiSensor_QPE_01H_Pass2", "GaugeCorr_QPE_01H"],
+    "MultiSensor_QPE_24H_Pass2_00.00": ["MultiSensor_QPE_24H_Pass2", "GaugeCorr_QPE_24H", "RadarOnly_QPE_24H"],
+    "RadarOnly_QPE_01H_00.00": ["RadarOnly_QPE_01H"],
+    "RadarOnly_QPE_15M_00.00": ["RadarOnly_QPE_15M"],
+    "ReflectivityAtLowestAltitude_00.50": ["ReflectivityAtLowestAltitude", "SeamlessHSR"],
+    "PrecipFlag_00.00": ["PrecipFlag"],
+}
+IEM_FILE_RE = re.compile(r'href="([^"/]+_(\d{8})-(\d{6})\.grib2\.gz)"')
+
 PRECIP_RATE = "PrecipRate_00.00"                    # mm/hr, every 2 min
 PASS2_01H = "MultiSensor_QPE_01H_Pass2_00.00"       # mm, hour ending at stamp
 REFLECTIVITY = "ReflectivityAtLowestAltitude_00.50"  # dBZ, every ~2 min
@@ -60,11 +75,42 @@ def _get(url, tries=4, stream=False):
     raise RuntimeError(f"MRMS request failed: {url}")
 
 
+def _list_iem_day(product, day, start_utc, end_utc):
+    """IEM mtarchive listing for one UTC day. Keys are full URLs. [] if the product was not archived."""
+    for name in IEM_ALIASES.get(product, [product.replace("_00.00", "")]):
+        url = f"{IEM_ROOT}/{day:%Y/%m/%d}/mrms/ncep/{name}/"
+        try:
+            r = _get(url, tries=2)
+        except RuntimeError:
+            r = None
+        if r is None:
+            continue
+        out = []
+        for fn, d8, t6 in IEM_FILE_RE.findall(r.text):
+            ts = datetime.strptime(d8 + t6, "%Y%m%d%H%M%S").replace(tzinfo=timezone.utc)
+            if start_utc <= ts <= end_utc:
+                out.append((ts, url + fn))
+        if out:
+            return out
+    return []
+
+
+def source_for(ts: datetime) -> str:
+    return "aws" if ts >= AWS_START else "iem"
+
+
 def list_product(product: str, start_utc: datetime, end_utc: datetime):
-    """Return sorted [(timestamp_utc, key)] for files stamped within [start, end]."""
+    """Return sorted [(timestamp_utc, key)] for files stamped within [start, end].
+
+    Keys are bucket keys (AWS) or full URLs (IEM mtarchive, dates before AWS_START or AWS gaps)."""
     out = []
     day = start_utc.date()
     while day <= end_utc.date():
+        if day < AWS_START.date():
+            out += _list_iem_day(product, day, start_utc, end_utc)
+            day += timedelta(days=1)
+            continue
+        n_before = len(out)
         prefix = f"CONUS/{product}/{day:%Y%m%d}/"
         token = None
         while True:
@@ -85,6 +131,8 @@ def list_product(product: str, start_utc: datetime, end_utc: datetime):
                 token = root.findtext("s3:NextContinuationToken", namespaces=NS)
             else:
                 break
+        if len(out) == n_before and day == AWS_START.date():
+            out += _list_iem_day(product, day, start_utc, end_utc)
         day += timedelta(days=1)
     return sorted(out)
 
@@ -98,12 +146,13 @@ def read_cropped(key: str, bbox, cache_dir: str | None = None):
 
     cache = None
     if cache_dir:
-        cache = os.path.join(cache_dir, key.replace("/", "_") + ".npz")
+        ck = re.sub(r"^https?://[^/]+/", "", key)
+        cache = os.path.join(cache_dir, ck.replace("/", "_") + ".npz")
         if os.path.exists(cache):
             z = np.load(cache)
             g = Grid(float(z["lat0"]), float(z["lon0"]), float(z["d"]), tuple(z["v"].shape))
             return g, z["v"]
-    r = _get(f"{BUCKET}/{key}")
+    r = _get(key if key.startswith("http") else f"{BUCKET}/{key}")
     if r is None:
         raise FileNotFoundError(key)
     raw = gzip.decompress(r.content)

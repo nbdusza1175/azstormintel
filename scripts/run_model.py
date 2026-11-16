@@ -22,18 +22,27 @@ ap = argparse.ArgumentParser()
 ap.add_argument("--event", required=True)
 ap.add_argument("--basins", nargs="*")
 ap.add_argument("--preflight", action="store_true")
+ap.add_argument("--start-local", help="ad-hoc event start (MST, on the hour); with --end-local")
+ap.add_argument("--end-local")
+ap.add_argument("--label")
+ap.add_argument("--out", help="output dir (default site/data/events/<site_event>/model)")
 a = ap.parse_args()
 
 cfg_path = os.path.join(ROOT, "config", "model.json")
 if a.preflight:
     M.preflight(cfg_path)
 cfg = json.load(open(cfg_path))
+adhoc = None
+if a.start_local:
+    adhoc = {"label": a.label or f"{a.start_local} to {a.end_local} MST", "start_local": a.start_local,
+             "end_local": a.end_local, "tz": "America/Phoenix"}
+    cfg["events"][a.event] = adhoc
 ev = cfg["events"][a.event]
 site_ev = ev.get("site_event", a.event)
-out = os.path.join(ROOT, "site", "data", "events", site_ev, "model")
+out = a.out or os.path.join(ROOT, "site", "data", "events", site_ev, "model")
 os.makedirs(out, exist_ok=True)
 t0 = time.time()
-res = M.run_event(a.basins or "all", a.event, cfg_path, out, cache=os.path.join(ROOT, ".cache", "model"))
+res = M.run_event(a.basins or "all", a.event, cfg_path, out, cache=os.path.join(ROOT, ".cache", "model"), event=adhoc)
 idx_p = os.path.join(out, "index.json")
 idx = json.load(open(idx_p)) if os.path.exists(idx_p) else {"basins": {}}
 for k in (a.basins or cfg["basins"].keys()):
