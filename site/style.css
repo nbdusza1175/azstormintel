@@ -127,3 +127,5 @@ button.primary:disabled { opacity: .6; cursor: default; }
 .steps .ic { width: 14px; text-align: center; }
 .steps li.in_progress .ic { color: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: .3; } }
+
+.title a.home { color: inherit; text-decoration: none; }

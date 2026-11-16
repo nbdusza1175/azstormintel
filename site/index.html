@@ -3,65 +3,90 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AZ Storm Intel — Coconino County storm &amp; flood intensity</title>
-<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
-<link rel="stylesheet" href="style.css">
+<title>AZ Storm Intel — storm &amp; flood intensity for Coconino County</title>
+<meta name="description" content="Radar-driven storm and flood intensity for Coconino County, Arizona watersheds.">
+<script>
+  // Old links to the map (index.html#event or #run=...) now live on map.html
+  if (location.hash.length > 1 && location.hash !== "#contact") location.replace("map.html" + location.hash);
+</script>
+<link rel="stylesheet" href="landing.css">
 </head>
 <body>
-<div class="viz-root app">
-  <header class="top">
-    <div class="brand">
-      <div class="title">AZ Storm Intel</div>
-      <div class="sub">Coconino County storm &amp; flood intensity · radar-driven, gauges as checks</div>
-    </div>
-    <div class="evpick">
-      <label for="event">Event</label>
-      <select id="event"></select>
-      <span id="evinfo" class="muted"></span>
-      <button id="newRun" class="primary" type="button">New analysis…</button>
-    </div>
-  </header>
+<div class="topo" aria-hidden="true"></div>
 
-  <aside class="side" id="side">
-    <div class="loading" id="loading">Loading…</div>
-  </aside>
+<main>
+  <section class="hero">
+    <p class="kicker">Coconino County, Arizona</p>
+    <h1>AZ Storm Intel</h1>
+    <p class="lead">See how hard it rained over a watershed, and how big a flood that rain could produce,
+      for any storm in the last ten years.</p>
+    <a class="launch" href="map.html">Launch the map <span aria-hidden="true">→</span></a>
+  </section>
 
-  <section class="mapwrap">
-    <div id="map"></div>
-    <div class="mapctl">
-      <div class="seg" role="group" aria-label="Radar layer">
-        <button data-r="dbz" class="on">Radar dBZ</button>
-        <button data-r="int">Rain rate</button>
-        <button data-r="none">Off</button>
+  <section class="uses" aria-labelledby="uses-h">
+    <h2 id="uses-h">What it does</h2>
+    <div class="grid">
+      <div class="item">
+        <h3>Storm intensity</h3>
+        <p>NOAA MRMS radar rainfall in 5-minute steps over each basin, compared to NOAA Atlas 14 to give a return period.</p>
       </div>
-      <label class="chk"><input type="checkbox" id="cellsOn" checked> Basin cells</label>
-      <label class="chk">Opacity <input type="range" id="op" min="0.2" max="1" step="0.05" value="0.55"></label>
+      <div class="item">
+        <h3>Flood intensity</h3>
+        <p>Peak discharge at the basin outlet from terrain, soils, land cover and soil moisture, compared to USGS flood-frequency estimates.</p>
+      </div>
+      <div class="item">
+        <h3>Any storm, back 10 years</h3>
+        <p>Pick a time window and the analysis runs on public data: live radar, recent events, or storms from past seasons.</p>
+      </div>
+      <div class="item">
+        <h3>Gauges as checks</h3>
+        <p>Rain and stream gauges are shown alongside the results to check them, never to tune them, so the same inputs give the same answer.</p>
+      </div>
     </div>
-    <div class="legend" id="legend"></div>
   </section>
 
-  <section class="timeline">
-    <div class="tctl">
-      <button id="prev" aria-label="Previous step">◀</button>
-      <button id="play" aria-label="Play">▶</button>
-      <button id="next" aria-label="Next step">▶|</button>
-      <select id="speed" aria-label="Playback speed"><option value="250">4×/s</option><option value="100" selected>10×/s</option><option value="40">25×/s</option></select>
-      <input type="range" id="slider" min="0" max="0" value="0" aria-label="Time">
-      <span id="tlabel" class="tlabel"></span>
-      <button id="jumpPeak" class="link">jump to peak</button>
-    </div>
-    <div class="chartwrap">
-      <div class="chead"><span class="ctitle">Basin-average rain rate, 5-min (in/hr)</span><span class="clegend" id="clegend"></span>
-        <button class="link" id="tableBtn">table</button></div>
-      <svg id="chart" role="img" aria-label="Basin-average rain rate over the event"></svg>
-      <div class="tip" id="tip" hidden></div>
-    </div>
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <h2 id="contact-h">Contact</h2>
+    <p class="muted">Questions, data, or a basin you'd like added? Send a note.</p>
+    <form id="contactForm" novalidate>
+      <div class="row2">
+        <label>Name<input name="name" autocomplete="name" required maxlength="120"></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required maxlength="200"></label>
+      </div>
+      <label>Message<textarea name="message" rows="5" required maxlength="5000"></textarea></label>
+      <input name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="send"><span id="cStatus" role="status"></span><button type="submit" id="cSend">Send</button></div>
+    </form>
   </section>
-  <div class="modal" id="modal" hidden><div class="mbox"><button class="mclose" id="mclose" aria-label="Close">×</button><div id="mbody"></div></div></div>
-</div>
-<script src="vendor/leaflet/leaflet.js"></script>
+</main>
+
+<footer>
+  <span>AZ Storm Intel · radar: NOAA MRMS · terrain: USGS 3DEP · land cover: USGS NLCD · soils: USDA SSURGO</span>
+</footer>
+
 <script src="config.js"></script>
-<script src="runs.js"></script>
-<script src="app.js"></script>
+<script>
+(function () {
+  const f = document.getElementById("contactForm"), st = document.getElementById("cStatus"), btn = document.getElementById("cSend");
+  const endpoint = (window.AZSTORM_CONFIG || {}).contact || "";
+  const say = (t, cls) => { st.textContent = t; st.className = cls || ""; };
+  f.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(f));
+    if (d._gotcha) return;                                   // spam trap
+    if (!d.name.trim() || !d.message.trim()) return say("Please add your name and a message.", "err");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return say("Please enter a valid email address.", "err");
+    if (!endpoint) return say("The contact form isn't set up yet — please check back soon.", "err");
+    btn.disabled = true; say("Sending…");
+    try {
+      const r = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name: d.name, email: d.email, message: d.message, _subject: "AZ Storm Intel contact" }) });
+      if (!r.ok) throw new Error(r.status);
+      f.reset(); say("Thanks — your message was sent.", "ok");
+    } catch (er) { say("Sorry, the message didn't go through. Please try again later.", "err"); }
+    finally { btn.disabled = false; }
+  });
+})();
+</script>
 </body>
 </html>
