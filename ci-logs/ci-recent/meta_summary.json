@@ -1,0 +1,93 @@
+{
+ "qa": {
+  "precip_rate_scans_listed": 186,
+  "precip_rate_scans_missing": 0,
+  "pass2_hours_expected": 6,
+  "pass2_hours_found": 6,
+  "steps_with_missing_minutes": 0,
+  "reflectivity_frames_missing": 0,
+  "cells_factor_clipped": 19,
+  "cells_even_spread": 0,
+  "archive": [
+   "aws"
+  ],
+  "pass2_product": [
+   "MultiSensor_QPE_01H_Pass2_00.00"
+  ]
+ },
+ "basins": [
+  {
+   "id": "mountain_dell",
+   "summary": {
+    "area_sqmi": 8.57,
+    "n_cells": 40,
+    "total_in": 0.98,
+    "max_cell_total_in": 1.04,
+    "peak_5min_inhr": 0.393,
+    "peak_5min_utc": "2026-11-01T13:55:00+00:00",
+    "worst_cell_5min_inhr": 0.603,
+    "max_area_ge_0_5_sqmi": 1.64,
+    "steps_ge_0_5": 3,
+    "any_cell_ge_1": false,
+    "snow_steps": 0,
+    "snow_max_pct": 0.0,
+    "durations": {
+     "5": {
+      "depth_in": 0.033,
+      "intensity_inhr": 0.393,
+      "end_utc": "2026-11-01T13:55:00+00:00",
+      "worst_cell_depth_in": 0.05,
+      "worst_cell_inhr": 0.603
+     },
+     "15": {
+      "depth_in": 0.088,
+      "intensity_inhr": 0.354,
+      "end_utc": "2026-11-01T13:55:00+00:00",
+      "worst_cell_depth_in": 0.108,
+      "worst_cell_inhr": 0.434
+     },
+     "30": {
+      "depth_in": 0.153,
+      "intensity_inhr": 0.306,
+      "end_utc": "2026-11-01T14:00:00+00:00",
+      "worst_cell_depth_in": 0.186,
+      "worst_cell_inhr": 0.371
+     },
+     "60": {
+      "depth_in": 0.259,
+      "intensity_inhr": 0.259,
+      "end_utc": "2026-11-01T13:55:00+00:00",
+      "worst_cell_depth_in": 0.281,
+      "worst_cell_inhr": 0.281
+     },
+     "120": {
+      "depth_in": 0.42,
+      "intensity_inhr": 0.21,
+      "end_utc": "2026-11-01T14:05:00+00:00",
+      "worst_cell_depth_in": null,
+      "worst_cell_inhr": null
+     },
+     "180": {
+      "depth_in": 0.594,
+      "intensity_inhr": 0.198,
+      "end_utc": "2026-11-01T15:45:00+00:00",
+      "worst_cell_depth_in": null,
+      "worst_cell_inhr": null
+     },
+     "360": {
+      "depth_in": 0.975,
+      "intensity_inhr": 0.163,
+      "end_utc": "2026-11-01T16:00:00+00:00",
+      "worst_cell_depth_in": null,
+      "worst_cell_inhr": null
+     }
+    },
+    "pass2_over_precip_rate": 1.34,
+    "factor_range": [
+     1.13,
+     1.53
+    ]
+   }
+  }
+ ]
+}
