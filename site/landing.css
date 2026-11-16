@@ -41,12 +41,14 @@ h1 { margin: 0; font-size: clamp(40px, 7vw, 76px); line-height: 1.05; letter-spa
 
 h2 { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--sand); margin: 0 0 16px; font-weight: 600; }
 .uses { padding: 4vh 0 8vh; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
-.item { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; backdrop-filter: blur(3px); }
-.item h3 { margin: 0 0 6px; font-size: 17px; }
-.item p { margin: 0; color: var(--muted); font-size: 14.5px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.uses h2 { text-align: center; }
+.item { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 22px; backdrop-filter: blur(3px); }
+.item h3 { margin: 0 0 8px; font-size: 18px; }
+.item p { margin: 0; color: var(--muted); font-size: 15px; }
 
-.contact { padding: 2vh 0 10vh; max-width: 640px; }
+.contact { padding: 2vh 0 10vh; max-width: 640px; margin: 0 auto; }
+.contact h2, .contact .muted { text-align: center; }
 .muted { color: var(--muted); margin: -6px 0 16px; }
 form { display: grid; gap: 12px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -70,5 +72,6 @@ textarea { resize: vertical; min-height: 120px; }
 
 footer { padding: 22px 0 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12.5px; text-align: center; }
 
+@media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .row2 { grid-template-columns: 1fr; } .hero { padding-top: 11vh; } }
 @media (prefers-reduced-motion: reduce) { .launch { transition: none; } }
