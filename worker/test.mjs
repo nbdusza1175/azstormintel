@@ -23,7 +23,7 @@ const id1 = await runId(ok, "3.4.0"), id2 = await runId({ ...ok }, "3.4.0"), id3
 assert.equal(id1, id2); assert.notEqual(id1, id3); assert.match(id1, /^r[0-9a-f]{14}$/);
 
 // --- uploaded basin
-const up = JSON.parse(fs.readFileSync("/tmp/e2e/upload_fv.json", "utf8"));
+const up = JSON.parse(read("tests/fixtures/upload_fv_auto_outlet.json"));
 assert.ok(Math.abs(areaSqmi(up.geometry) - 29.0) < 0.6, "area " + areaSqmi(up.geometry));
 const vb = validateRequest({ start_mst: "2026-11-01T05:00", end_mst: "2026-11-01T08:00", basin: up }, limits, ids, now);
 assert.ok(!vb.error, vb.error); assert.deepEqual(vb.basins, ["upload"]); assert.ok(vb.custom.length < limits.max_basin_json_chars);
@@ -31,7 +31,7 @@ const vbOut = validateRequest({ start_mst: "2026-11-01T05:00", end_mst: "2026-11
 assert.match(vbOut.error, /Arizona/);
 const vbPt = validateRequest({ start_mst: "2026-11-01T05:00", end_mst: "2026-11-01T08:00", basin: { geometry: { type: "Point", coordinates: [-111, 35] } } }, limits, ids, now);
 assert.match(vbPt.error, /polygon/);
-assert.notEqual(await runId(vb, "3.4.0"), await runId({ ...vb, custom: vb.custom.replace("Fort", "Fxrt") }, "3.4.0"));
+assert.notEqual(await runId(vb, "3.4.0"), await runId({ ...vb, custom: vb.custom.replace("Rio", "Rix") }, "3.4.0"));
 
 // --- request flow with mocked GitHub
 const files = { "config/limits.json": read("config/limits.json"), "config/basins.json": read("config/basins.json"), "config/model.json": read("config/model.json") };
