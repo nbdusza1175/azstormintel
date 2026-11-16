@@ -29,10 +29,10 @@ IEM_ROOT = "https://mtarchive.geol.iastate.edu"
 IEM_ALIASES = {  # AWS product -> IEM directory names to try, in order (gauge-corrected = pre-v12 "Pass 2")
     "PrecipRate_00.00": ["PrecipRate"],
     "MultiSensor_QPE_01H_Pass2_00.00": ["MultiSensor_QPE_01H_Pass2", "GaugeCorr_QPE_01H"],
-    "MultiSensor_QPE_24H_Pass2_00.00": ["MultiSensor_QPE_24H_Pass2", "GaugeCorr_QPE_24H"],
+    "MultiSensor_QPE_24H_Pass2_00.00": ["MultiSensor_QPE_24H_Pass2", "GaugeCorr_QPE_24H", "RadarOnly_QPE_24H"],
     "RadarOnly_QPE_01H_00.00": ["RadarOnly_QPE_01H"],
     "RadarOnly_QPE_15M_00.00": ["RadarOnly_QPE_15M"],
-    "ReflectivityAtLowestAltitude_00.50": ["ReflectivityAtLowestAltitude", "MergedReflectivityQCComposite"],
+    "ReflectivityAtLowestAltitude_00.50": ["ReflectivityAtLowestAltitude", "SeamlessHSR"],
     "PrecipFlag_00.00": ["PrecipFlag"],
 }
 IEM_FILE_RE = re.compile(r'href="([^"/]+_(\d{8})-(\d{6})\.grib2\.gz)"')

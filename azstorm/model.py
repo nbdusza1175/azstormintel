@@ -2083,12 +2083,15 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
 
     # ---- 7. storm intensity ----------------------------------------------------
     st = []
+    tcrec = None
     nat_hr = step_native / 60
     for D in list(bc["durations_hr"]) + ["Tc"]:
         Dh = max(Tc, nat_hr) if D == "Tc" else float(D)
         n = int(round(Dh / nat_hr))
         if abs(n * nat_hr - Dh) > 1e-6 and D != "Tc":
             continue
+        if D == "Tc" and n > len(basin_native):
+            n = max(1, len(basin_native))  # window shorter than Tc: whole-window depth
         dep, kend = max_running(basin_native, n)
         if not np.isfinite(dep):
             continue
@@ -2104,7 +2107,9 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
             st.append(rec)
     def tkey(d):
         return (d["T"] if np.isfinite(d["T"]) else 0) + (0.001 if d["q"] == ">" else 0) - (0.5 if d["q"] == "<" else 0)
-    ctrl = max(st, key=tkey)
+    if tcrec is None:
+        flags.append("Storm window is shorter than Tc; the Tc-duration intensity could not be computed.")
+    ctrl = max(st, key=tkey) if st else tcrec
     storm = dict(durations=st, tc_duration=tcrec, controlling=ctrl, total_in=total,
                  max_1hr_in=float(basin_hourly.max()), resolution=rain_res,
                  headline=f"~{fmt_T(ctrl['T'], ctrl['q'])} storm at {ctrl['label']} ({ctrl['depth_in']:.2f} in)",
@@ -2113,11 +2118,11 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
         storm["pass2_vs_radaronly"] = total / ro_total if ro_total > 0 else None
 
     # ---- 8. cross-checks ---------------------------------------------------------
-    i_tc = tcrec["intensity_inhr"]
+    i_tc = tcrec["intensity_inhr"] if tcrec else float("nan")
     kb = bc["fcdmc_tc"]["Kb"]
     tcf = Tc
     for _ in range(30):
-        n = max(1, int(round(tcf / nat_hr)))
+        n = min(max(1, int(round(tcf / nat_hr))), max(1, len(basin_native)))
         dep, _k = max_running(basin_native, n)
         i_ = max(dep / (n * nat_hr), 0.01)
         tcf_new = 11.4 * L_long_mi ** 0.5 * kb ** 0.52 * max(S_long_ftmi, 1) ** -0.31 * i_ ** -0.38

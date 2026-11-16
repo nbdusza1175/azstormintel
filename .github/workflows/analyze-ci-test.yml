@@ -29,8 +29,17 @@ jobs:
           for d in 2018/07/27 2016/01/15 2019/09/01; do
             echo "== IEM $d"; curl -s "https://mtarchive.geol.iastate.edu/$d/mrms/ncep/" | grep -o 'href="[A-Za-z_0-9]*/"' | tr '\n' ' '; echo
           done
-          echo "== MRLC annual NLCD coverages"
-          curl -s "https://www.mrlc.gov/geoserver/mrlc_download/wcs?service=WCS&version=2.0.1&request=GetCapabilities" | grep -o "<wcs:CoverageId>[^<]*Annual[^<]*</wcs:CoverageId>" | sed 's/<[^>]*>//g' | sort | tr '\n' ' ' | head -c 4000; echo
+          echo "== MRLC annual (WCS ows, WCS mrlc_download, WMS mrlc_display)"
+          for u in "https://www.mrlc.gov/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities" \
+                   "https://www.mrlc.gov/geoserver/wcs?service=WCS&version=2.0.1&request=GetCapabilities" \
+                   "https://www.mrlc.gov/geoserver/mrlc_display/wms?service=WMS&version=1.3.0&request=GetCapabilities" \
+                   "https://www.mrlc.gov/geoserver/ows?service=WMS&version=1.3.0&request=GetCapabilities"; do
+            echo "-- $u"; curl -s --max-time 120 "$u" | grep -oi "[A-Za-z_:]*Annual[A-Za-z_0-9:]*" | sort -u | head -40 | tr '\n' ' '; echo
+          done
+          echo "== source.coop annual NLCD mosaic"
+          curl -s "https://s3.us-west-2.amazonaws.com/us-west-2.opendata.source.coop?list-type=2&prefix=kylebarron/usgs-landcover/annual-nlcd/c1/v1/cu/mosaic/&max-keys=400" | grep -o "<Key>[^<]*</Key>" | sed 's/<[^>]*>//g' | grep -i "lndcov\|fctimp" | head -100 | tr '\n' ' '; echo
+          echo "== usgs-landcover (requester pays) listing"
+          curl -s "https://usgs-landcover.s3.us-west-2.amazonaws.com/?list-type=2&prefix=annual-nlcd/c1/&delimiter=/" | head -c 600; echo
       - name: Run request
         continue-on-error: true
         run: |
