@@ -1,0 +1,46 @@
+{
+ "run_id": "r1cf94fe97c708b",
+ "start_mst": "2026-11-01T10:00",
+ "end_mst": "2026-11-02T10:00",
+ "basins": [
+  "fort_valley"
+ ],
+ "requested_utc": "2026-11-16T17:31:25.554423+00:00",
+ "pipeline_version": "3.4.0",
+ "name": "Nov 1 10:00 \u2013 Nov 2, 2026 10:00 MST",
+ "ok": true,
+ "stages": {
+  "validate": {
+   "ok": true,
+   "seconds": 0,
+   "note": ""
+  },
+  "radar": {
+   "ok": true,
+   "seconds": 222,
+   "note": ""
+  },
+  "model": {
+   "ok": true,
+   "seconds": 171,
+   "note": ""
+  },
+  "soil": {
+   "ok": true,
+   "seconds": 86,
+   "note": ""
+  }
+ },
+ "sources": {
+  "fort_valley": {
+   "DEM": "USGS 3DEP 10 m",
+   "Land cover": "Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious",
+   "Soils": "SSURGO (cache)",
+   "Precip frequency": "NOAA Atlas 14 PFDS (centroid)",
+   "Radar": "MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly"
+  }
+ },
+ "finished_utc": "2026-11-16T17:39:24.534696+00:00",
+ "start_utc": "2026-11-01T17:00:00+00:00",
+ "end_utc": "2026-11-02T17:00:00+00:00"
+}

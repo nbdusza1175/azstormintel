@@ -1,0 +1,22 @@
+{
+ "validate": {
+  "ok": true,
+  "seconds": 0,
+  "note": ""
+ },
+ "radar": {
+  "ok": true,
+  "seconds": 222,
+  "note": ""
+ },
+ "model": {
+  "ok": true,
+  "seconds": 171,
+  "note": ""
+ },
+ "soil": {
+  "ok": true,
+  "seconds": 86,
+  "note": ""
+ }
+}
