@@ -1,0 +1,247 @@
+{
+ "basin": {
+  "area_sqmi": 29.00376551574852,
+  "area_ref_sqmi": 29.005095757961495,
+  "source": "reference polygon, D8 routing inside it",
+  "area_note": "compare: reference polygon 29.01 sq mi",
+  "outlet_lat": 35.25635474762556,
+  "outlet_lon": -111.71240171501088,
+  "centroid_lat": 35.28624243701617,
+  "centroid_lon": -111.73018946032097,
+  "mean_elev_ft": 8129.816225351946,
+  "min_elev_ft": 7289.048475693359,
+  "max_elev_ft": 12353.594516972656,
+  "mean_slope_pct": 15.624188941314255,
+  "impervious_pct": 0.9981216569887404,
+  "hsg_pct": {
+   "A": 0.0,
+   "B": 0.0,
+   "C": 73.74912472676833,
+   "D": 26.25087527323168
+  },
+  "unmapped_soils_pct": 0.0
+ },
+ "sources": {
+  "DEM": "USGS 3DEP 10 m",
+  "Land cover": "Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious",
+  "Soils": "SSURGO via Soil Data Access",
+  "Precip frequency": "NOAA Atlas 14 PFDS (centroid)",
+  "Radar": "MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly"
+ },
+ "flags": [
+  "No usable pour point in the uploaded basin; the outlet was placed at the polygon-edge cell that drains the most area. Upload the StreamStats pour point for an exact outlet.",
+  "Cold season and mean elevation 8,130 ft: snow or frozen ground possible - CN losses may be wrong.",
+  "Basin is 29.0 sq mi: single linear reservoir, no channel storage routing; treat peak as screening-level."
+ ],
+ "storm": {
+  "durations": [
+   {
+    "label": "15m",
+    "duration_hr": 0.25,
+    "depth_in": 0.06686878003681396,
+    "arf": 0.8843374273232792,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.26747512014725583,
+    "end_local": "2026-11-01 15:00:00-07:00"
+   },
+   {
+    "label": "30m",
+    "duration_hr": 0.5,
+    "depth_in": 0.11502203640294861,
+    "arf": 0.9001660307697051,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.23004407280589723,
+    "end_local": "2026-11-01 15:15:00-07:00"
+   },
+   {
+    "label": "1h",
+    "duration_hr": 1.0,
+    "depth_in": 0.19578364052826847,
+    "arf": 0.9161948421403482,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.19578364052826847,
+    "end_local": "2026-11-01 07:00:00-07:00"
+   },
+   {
+    "label": "2h",
+    "duration_hr": 2.0,
+    "depth_in": 0.33682433209375295,
+    "arf": 0.9319415613019019,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.16841216604687648,
+    "end_local": "2026-11-01 08:00:00-07:00"
+   },
+   {
+    "label": "3h",
+    "duration_hr": 3.0,
+    "depth_in": 0.47469038215046155,
+    "arf": 0.9408064169858203,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.15823012738348718,
+    "end_local": "2026-11-01 09:00:00-07:00"
+   },
+   {
+    "label": "6h",
+    "duration_hr": 6.0,
+    "depth_in": 0.8469053068040614,
+    "arf": 0.9549892424822423,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.14115088446734356,
+    "end_local": "2026-11-01 08:00:00-07:00"
+   },
+   {
+    "label": "12h",
+    "duration_hr": 12.0,
+    "depth_in": 1.548086758216877,
+    "arf": 0.967502477189765,
+    "T": 1.0929852790250751,
+    "q": "",
+    "intensity_inhr": 0.12900722985140642,
+    "end_local": "2026-11-01 12:00:00-07:00"
+   },
+   {
+    "label": "24h",
+    "duration_hr": 24.0,
+    "depth_in": 2.4140286302002485,
+    "arf": 0.977939375294625,
+    "T": 3.286018814119721,
+    "q": "",
+    "intensity_inhr": 0.10058452625834369,
+    "end_local": "2026-11-02 00:00:00-07:00"
+   }
+  ],
+  "tc_duration": {
+   "label": "Tc(2.25h)",
+   "duration_hr": 2.25,
+   "depth_in": 0.37394451754058644,
+   "arf": 0.9345507392964358,
+   "T": 1.0,
+   "q": "<",
+   "intensity_inhr": 0.16619756335137176,
+   "end_local": "2026-11-01 08:15:00-07:00"
+  },
+  "controlling": {
+   "label": "24h",
+   "duration_hr": 24.0,
+   "depth_in": 2.4140286302002485,
+   "arf": 0.977939375294625,
+   "T": 3.286018814119721,
+   "q": "",
+   "intensity_inhr": 0.10058452625834369,
+   "end_local": "2026-11-02 00:00:00-07:00"
+  },
+  "total_in": 2.4140286302002485,
+  "max_1hr_in": 0.19578364052826852,
+  "resolution": "15 min",
+  "headline": "~3.3-yr storm at 24h (2.41 in)",
+  "radaronly_total_in": 1.9906853852970536,
+  "pass2_vs_radaronly": 1.2126620550037457,
+  "motion": {
+   "bearing_deg": 97.42993404646705,
+   "flowpath_bearing_deg": 202.17717643517992,
+   "relation": "across the flowpath"
+  }
+ },
+ "flood": {
+  "peak_cfs": 1240.2099137158052,
+  "T": 86.45324939516959,
+  "q": "",
+  "T_lo": [
+   9.625824167315699,
+   ""
+  ],
+  "T_hi": [
+   500.0,
+   ">"
+  ],
+  "headline": "Peak ~ 1,240 cfs, about a 86-yr flood",
+  "range_text": "90% prediction range: 9.6-yr to >500-yr",
+  "rarity_text": "flood 26.3x the storm return period",
+  "stats": {
+   "table": [
+    {
+     "T": 2.0,
+     "Q": 158.0,
+     "lo": 45.9,
+     "hi": 544.0
+    },
+    {
+     "T": 5.0,
+     "Q": 345.0,
+     "lo": 130.0,
+     "hi": 916.0
+    },
+    {
+     "T": 10.0,
+     "Q": 516.0,
+     "lo": 211.0,
+     "hi": 1260.0
+    },
+    {
+     "T": 25.0,
+     "Q": 787.0,
+     "lo": 335.0,
+     "hi": 1850.0
+    },
+    {
+     "T": 50.0,
+     "Q": 1030.0,
+     "lo": 439.0,
+     "hi": 2420.0
+    },
+    {
+     "T": 100.0,
+     "Q": 1300.0,
+     "lo": 545.0,
+     "hi": 3100.0
+    },
+    {
+     "T": 200.0,
+     "Q": 1620.0,
+     "lo": 660.0,
+     "hi": 3980.0
+    },
+    {
+     "T": 500.0,
+     "Q": 2100.0,
+     "lo": 809.0,
+     "hi": 5450.0
+    }
+   ],
+   "source": "_run_ci-upload-1_streamstats.csv",
+   "area_sqmi": 29.0,
+   "transfer_note": "",
+   "region": ""
+  },
+  "arc_band": {
+   "I": {
+    "peak_cfs": 238.1682189019983,
+    "cn_mean": 57.16410401911062,
+    "excess_in": 0.1119324976756555,
+    "T": 3.0381393514915915,
+    "q": ""
+   },
+   "II": {
+    "peak_cfs": 1240.2099137158052,
+    "cn_mean": 75.8939506705325,
+    "excess_in": 0.6483323538078576,
+    "T": 86.45324939516959,
+    "q": ""
+   },
+   "III": {
+    "peak_cfs": 1989.7593011111192,
+    "cn_mean": 87.80939902906057,
+    "excess_in": 1.3004797979492098,
+    "T": 410.4617524313424,
+    "q": ""
+   }
+  },
+  "band_text": "Antecedent band: ARC I 238 cfs (~3.0-yr) | ARC II 1,240 cfs (~86-yr) | ARC III 1,990 cfs (~410-yr)"
+ }
+}

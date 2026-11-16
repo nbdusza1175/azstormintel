@@ -1,0 +1,100 @@
+[
+ {
+  "id": "upload",
+  "name": "Rio de Flag (no pour point)",
+  "outlet": [
+   -111.71240171501088,
+   35.25635474762556
+  ],
+  "notes": [
+   "Uploaded basin.",
+   "Outlet placed by the model on the polygon edge (no pour point in the upload)."
+  ],
+  "summary": {
+   "area_sqmi": 29.03,
+   "n_cells": 102,
+   "total_in": 2.41,
+   "max_cell_total_in": 2.76,
+   "peak_5min_inhr": 0.358,
+   "peak_5min_utc": "2026-11-01T22:00:00+00:00",
+   "worst_cell_5min_inhr": 0.765,
+   "max_area_ge_0_5_sqmi": 5.89,
+   "steps_ge_0_5": 4,
+   "any_cell_ge_1": false,
+   "snow_steps": 37,
+   "snow_max_pct": 26.6,
+   "durations": {
+    "5": {
+     "depth_in": 0.03,
+     "intensity_inhr": 0.358,
+     "end_utc": "2026-11-01T22:00:00+00:00",
+     "worst_cell_depth_in": 0.064,
+     "worst_cell_inhr": 0.765
+    },
+    "15": {
+     "depth_in": 0.074,
+     "intensity_inhr": 0.296,
+     "end_utc": "2026-11-01T22:05:00+00:00",
+     "worst_cell_depth_in": 0.122,
+     "worst_cell_inhr": 0.486
+    },
+    "30": {
+     "depth_in": 0.121,
+     "intensity_inhr": 0.241,
+     "end_utc": "2026-11-01T22:20:00+00:00",
+     "worst_cell_depth_in": 0.179,
+     "worst_cell_inhr": 0.358
+    },
+    "60": {
+     "depth_in": 0.199,
+     "intensity_inhr": 0.199,
+     "end_utc": "2026-11-01T14:10:00+00:00",
+     "worst_cell_depth_in": 0.256,
+     "worst_cell_inhr": 0.256
+    },
+    "120": {
+     "depth_in": 0.337,
+     "intensity_inhr": 0.169,
+     "end_utc": "2026-11-01T15:05:00+00:00",
+     "worst_cell_depth_in": null,
+     "worst_cell_inhr": null
+    },
+    "180": {
+     "depth_in": 0.475,
+     "intensity_inhr": 0.158,
+     "end_utc": "2026-11-01T16:00:00+00:00",
+     "worst_cell_depth_in": null,
+     "worst_cell_inhr": null
+    },
+    "360": {
+     "depth_in": 0.848,
+     "intensity_inhr": 0.141,
+     "end_utc": "2026-11-01T15:05:00+00:00",
+     "worst_cell_depth_in": null,
+     "worst_cell_inhr": null
+    },
+    "720": {
+     "depth_in": 1.548,
+     "intensity_inhr": 0.129,
+     "end_utc": "2026-11-01T19:05:00+00:00",
+     "worst_cell_depth_in": null,
+     "worst_cell_inhr": null
+    },
+    "1440": {
+     "depth_in": 2.414,
+     "intensity_inhr": 0.101,
+     "end_utc": "2026-11-02T07:00:00+00:00",
+     "worst_cell_depth_in": null,
+     "worst_cell_inhr": null
+    }
+   },
+   "snow_first_utc": "2026-11-02T03:55:00+00:00",
+   "snow_last_utc": "2026-11-02T06:55:00+00:00",
+   "pass2_over_precip_rate": 1.22,
+   "factor_range": [
+    0.63,
+    2.48
+   ]
+  }
+ }
+]
