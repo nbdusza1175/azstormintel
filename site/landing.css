@@ -27,10 +27,10 @@ body {
 main, footer { position: relative; z-index: 1; width: min(980px, 92vw); margin: 0 auto; }
 main { flex: 1; }
 
-.hero { padding: 13vh 0 6vh; text-align: center; }
+.hero { padding: 16vh 0 10vh; text-align: center; }
 .kicker { margin: 0 0 10px; color: var(--sand); letter-spacing: .18em; text-transform: uppercase; font-size: 13px; font-weight: 600; }
 h1 { margin: 0; font-size: clamp(40px, 7vw, 76px); line-height: 1.05; letter-spacing: -0.01em; font-weight: 800; }
-.lead { margin: 18px auto 0; max-width: 620px; color: var(--muted); font-size: clamp(16px, 2vw, 19px); }
+.lead { margin: 18px auto 34px; max-width: 620px; color: var(--muted); font-size: clamp(16px, 2vw, 19px); }
 .launch {
   display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; border-radius: 999px;
   background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 17px; text-decoration: none;
@@ -40,8 +40,7 @@ h1 { margin: 0; font-size: clamp(40px, 7vw, 76px); line-height: 1.05; letter-spa
 .launch:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--sand); outline-offset: 3px; }
 
 h2 { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--sand); margin: 0 0 16px; font-weight: 600; }
-.uses { padding: 2vh 0 0; }
-.go { text-align: center; padding: 6vh 0 12vh; }
+.uses { padding: 4vh 0 8vh; }
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .uses h2 { text-align: center; }
 .item { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 22px; backdrop-filter: blur(3px); }
