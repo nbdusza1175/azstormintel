@@ -1,0 +1,8 @@
+bad run id
+stage validate exit 1
+bad run id
+stage radar exit 1
+bad run id
+stage model exit 1
+bad run id
+stage finalize exit 1
