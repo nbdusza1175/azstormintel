@@ -26,12 +26,12 @@ jobs:
           exec > >(tee ci-logs/${{ matrix.case }}/request_log.txt) 2>&1
           export CUSTOM_BASIN="$(cat tests/fixtures/${{ matrix.case }}.json)"
           for st in validate radar model finalize; do
-            python scripts/run_request.py --run-id ci-${{ matrix.case }} --start-mst 2026-11-01T00:00 --end-mst 2026-11-02T00:00 --basins "" --stage $st || echo "stage $st exit $?"
+            python scripts/run_request.py --run-id ci-upload-${{ strategy.job-index }} --start-mst 2026-11-01T00:00 --end-mst 2026-11-02T00:00 --basins "" --stage $st || echo "stage $st exit $?"
           done
       - name: Commit logs
         if: always()
         run: |
-          d=out/runs/ci-${{ matrix.case }}; o=ci-logs/${{ matrix.case }}
+          d=out/runs/ci-upload-${{ strategy.job-index }}; o=ci-logs/${{ matrix.case }}
           cp $d/run.json $d/stages.json $o/ 2>/dev/null || true
           cp $d/model/run_log.txt $o/ 2>/dev/null || true
           python -c "import json;m=json.load(open('$d/meta.json'));print(json.dumps([{k:b[k] for k in ('id','name','outlet','notes','summary')} for b in m['basins']],indent=1,default=str))" > $o/meta_basins.json || true
