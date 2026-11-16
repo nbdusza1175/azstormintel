@@ -36,7 +36,17 @@ export function corsHeaders(req, env) {
 const json = (obj, status, cors, extra = {}) =>
   new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json", ...cors, ...extra } });
 
-function gh(env, path, init = {}) {
+const TOKEN_HELP = "GitHub rejected the Worker's token: GITHUB_TOKEN is missing, mistyped or expired. " +
+  "Check Worker → Settings → Variables and Secrets, then open /api/health.";
+
+async function gh(env, path, init = {}) {
+  if (!env.GITHUB_TOKEN) throw new Error("The Worker has no GITHUB_TOKEN secret. Add it under Worker → Settings → Variables and Secrets.");
+  const r = await ghRaw(env, path, init);
+  if (r.status === 401) throw new Error(TOKEN_HELP);
+  return r;
+}
+
+function ghRaw(env, path, init = {}) {
   return fetch(GH + path, {
     ...init,
     headers: {
@@ -194,6 +204,22 @@ export default {
     const url = new URL(req.url);
     const p = url.pathname.replace(/\/+$/, "");
     try {
+      if (p === "/api/health" && req.method === "GET") {
+        // Diagnoses the token without exposing it.
+        const t = env.GITHUB_TOKEN || "";
+        const out = { repo: env.REPO, token_set: !!t, token_length: t.length,
+          token_has_whitespace_or_quotes: /[\s"']/.test(t), token_prefix: t.slice(0, 11) };
+        if (t) {
+          const a = await ghRaw(env, `/repos/${env.REPO}`);
+          out.repo_access = a.status === 200 ? "ok" : `HTTP ${a.status}${a.status === 401 ? " (token rejected)" : a.status === 404 ? " (token cannot see this repo)" : ""}`;
+          const w = await ghRaw(env, `/repos/${env.REPO}/actions/workflows/${WORKFLOW}`);
+          out.actions_access = w.status === 200 ? "ok" : `HTTP ${w.status}`;
+          const b = await ghRaw(env, `/repos/${env.REPO}/contents/config/limits.json?ref=main`);
+          out.contents_access = b.status === 200 ? "ok" : `HTTP ${b.status}`;
+        }
+        out.ok = out.repo_access === "ok" && out.actions_access === "ok" && out.contents_access === "ok";
+        return json(out, 200, cors, { "Cache-Control": "no-store" });
+      }
       if (p === "/api/config" && req.method === "GET") {
         return json(await siteConfig(env), 200, cors, { "Cache-Control": "public, max-age=300" });
       }
