@@ -1,4 +1,4 @@
-/**
+/** azstormintel API Worker (v3.4.1)
  * azstormintel API — Cloudflare Worker.
  *
  * The site is static (GitHub Pages). This Worker turns a user's request into a GitHub Actions
