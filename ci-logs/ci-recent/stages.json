@@ -1,0 +1,17 @@
+{
+ "validate": {
+  "ok": true,
+  "seconds": 0,
+  "note": ""
+ },
+ "radar": {
+  "ok": true,
+  "seconds": 35,
+  "note": ""
+ },
+ "model": {
+  "ok": true,
+  "seconds": 67,
+  "note": ""
+ }
+}
