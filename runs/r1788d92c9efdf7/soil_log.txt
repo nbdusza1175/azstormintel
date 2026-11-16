@@ -1,0 +1,25 @@
+SMAP SPL4SMGP versions in CMR: ['008']
+SMAP cells touching upload: 1 (largest share 100%)
+  SMAP event start 2026-10-29T15:00:00.000Z v008: upload rz 0.2095
+  SMAP prior 2026-09-29T18:00:00.000Z v008: upload rz 0.2405
+  SMAP prior 2026-10-02T18:00:00.000Z v008: upload rz 0.2146
+  SMAP prior 2026-10-05T18:00:00.000Z v008: upload rz 0.2062
+  SMAP prior 2026-10-08T18:00:00.000Z v008: upload rz 0.2028
+  SMAP prior 2026-10-11T18:00:00.000Z v008: upload rz 0.2257
+  SMAP prior 2026-10-14T18:00:00.000Z v008: upload rz 0.2282
+  SMAP prior 2026-10-17T18:00:00.000Z v008: upload rz 0.215
+  SMAP prior 2026-10-20T18:00:00.000Z v008: upload rz 0.2123
+  SMAP prior 2026-10-23T18:00:00.000Z v008: upload rz 0.2189
+  SMAP prior 2026-10-26T18:00:00.000Z v008: upload rz 0.2166
+  SMAP climatology 2015 2015-10-29T15:00:00.000Z v008: upload rz 0.2134
+  SMAP climatology 2016 2016-10-29T15:00:00.000Z v008: upload rz 0.1804
+  SMAP climatology 2017 2017-10-29T15:00:00.000Z v008: upload rz 0.1615
+  SMAP climatology 2018 2018-10-29T15:00:00.000Z v008: upload rz 0.2779
+  SMAP climatology 2019 2019-10-29T15:00:00.000Z v008: upload rz 0.1852
+  SMAP climatology 2020 2020-10-29T15:00:00.000Z v008: upload rz 0.1574
+  SMAP climatology 2021 2021-10-29T15:00:00.000Z v008: upload rz 0.1862
+  SMAP climatology 2022 2022-10-29T15:00:00.000Z v008: upload rz 0.2182
+  SMAP climatology 2023 2023-10-29T15:00:00.000Z v008: upload rz 0.1617
+  SMAP climatology 2024 2024-10-29T15:00:00.000Z v008: upload rz 0.1592
+  SMAP climatology 2025 2025-10-29T15:00:00.000Z v008: upload rz 0.2698
+wrote soil.json; errors: 0
