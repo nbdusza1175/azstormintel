@@ -1,0 +1,16 @@
+{
+ "run_id": "r8bff1604380f23",
+ "start_mst": "2026-11-13T11:00",
+ "end_mst": "2026-11-15T11:00",
+ "basins": [
+  "upload"
+ ],
+ "custom_basin": {
+  "name": "fort valley",
+  "area_sqmi": 29.03,
+  "outlet_from_file": true,
+  "streamstats_report": true
+ },
+ "requested_utc": "2026-11-16T18:51:02.065207+00:00",
+ "pipeline_version": "3.4.0"
+}
