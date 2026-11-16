@@ -43,6 +43,10 @@ def main():
     ap.add_argument("--start-mst")
     ap.add_argument("--end-mst")
     ap.add_argument("--cache", default=os.path.join(ROOT, ".cache", "mrms"))
+    ap.add_argument("--out-dir", help="write here instead of site/data/events/<id> (on-demand runs)")
+    ap.add_argument("--basins", nargs="*", help="basin ids (default: all in config/basins.json)")
+    ap.add_argument("--name")
+    ap.add_argument("--no-index", action="store_true", help="do not add the event to site/data/events.json")
     args = ap.parse_args()
 
     cfg = json.load(open(os.path.join(ROOT, "config", "basins.json")))
@@ -54,11 +58,13 @@ def main():
         out_dir = os.path.join(ROOT, "site", "data", "live")
     else:
         ev = next((e for e in cfg["events"] if e["id"] == args.event), None)
-        if ev is None:
-            ev = {"id": args.event, "name": args.event, "start_mst": args.start_mst, "end_mst": args.end_mst}
+        if ev is None or args.start_mst:
+            ev = {"id": args.event, "name": args.name or args.event, "start_mst": args.start_mst, "end_mst": args.end_mst}
         start = datetime.fromisoformat(ev["start_mst"]).replace(tzinfo=MST).astimezone(timezone.utc)
         end = datetime.fromisoformat(ev["end_mst"]).replace(tzinfo=MST).astimezone(timezone.utc)
-        out_dir = os.path.join(ROOT, "site", "data", "events", ev["id"])
+        out_dir = args.out_dir or os.path.join(ROOT, "site", "data", "events", ev["id"])
+    if args.basins:
+        cfg["basins"] = [b for b in cfg["basins"] if b["id"] in args.basins]
     os.makedirs(os.path.join(out_dir, "logs"), exist_ok=True)
     os.makedirs(args.cache, exist_ok=True)
 
@@ -148,6 +154,9 @@ def main():
                     "PrecipFlag via AWS noaa-mrms-pds"],
     }
     json.dump(meta, open(os.path.join(out_dir, "meta.json"), "w"), separators=(",", ":"))
+    if args.no_index:
+        print(f"wrote {out_dir} in {time.time() - t0:.0f}s")
+        return
     # event index for the site
     idx_path = os.path.join(ROOT, "site", "data", "events.json")
     idx = json.load(open(idx_path)) if os.path.exists(idx_path) else {"events": []}

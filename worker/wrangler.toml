@@ -1,0 +1,15 @@
+name = "azstormintel-api"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+REPO = "nbdusza1175/azstormintel"
+REF = "main"
+ALLOWED_ORIGINS = "https://azstormintel.com,https://www.azstormintel.com,https://nbdusza1175.github.io"
+RUNS_PER_IP_HOUR = "6"
+
+# Secret (not in this file):  npx wrangler secret put GITHUB_TOKEN
+# Optional per-IP rate limit: create a KV namespace and uncomment.
+# [[kv_namespaces]]
+# binding = "RATE"
+# id = "<namespace id>"

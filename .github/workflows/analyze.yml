@@ -1,0 +1,93 @@
+name: Analyze
+# On-demand analysis for azstormintel.com. Started by the site's API Worker (worker/) with
+# workflow_dispatch; results are committed to the `runs` branch under runs/<run_id>/.
+run-name: "analyze ${{ inputs.run_id }}"
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "run id (lowercase letters, digits, dashes)"
+        required: true
+      start_mst:
+        description: "start, MST (YYYY-MM-DDTHH:MM)"
+        required: true
+      end_mst:
+        description: "end, MST (YYYY-MM-DDTHH:MM)"
+        required: true
+      basins:
+        description: "comma-separated basin ids from config/basins.json"
+        default: "fort_valley,mountain_dell"
+permissions:
+  contents: write
+concurrency:
+  group: analyze-${{ inputs.run_id }}
+  cancel-in-progress: false
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      RUN_ID: ${{ inputs.run_id }}
+      START_MST: ${{ inputs.start_mst }}
+      END_MST: ${{ inputs.end_mst }}
+      BASINS: ${{ inputs.basins }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: .cache
+          key: analyze-cache-${{ github.run_id }}
+          restore-keys: |
+            analyze-cache-
+            build-cache-
+      - name: Validate request
+        run: python scripts/run_request.py --run-id "$RUN_ID" --start-mst "$START_MST" --end-mst "$END_MST" --basins "$BASINS" --stage validate
+      - name: Radar rainfall (MRMS)
+        run: python scripts/run_request.py --run-id "$RUN_ID" --start-mst "$START_MST" --end-mst "$END_MST" --basins "$BASINS" --stage radar
+      - name: Flood model (3DEP, NLCD, SSURGO, Atlas 14)
+        continue-on-error: true
+        run: python scripts/run_request.py --run-id "$RUN_ID" --start-mst "$START_MST" --end-mst "$END_MST" --basins "$BASINS" --stage model
+      - name: Soil moisture (NASA SMAP)
+        continue-on-error: true
+        env:
+          EARTHDATA_USER: ${{ secrets.Earthdata_user }}
+          EARTHDATA_PASS: ${{ secrets.Earthdata_pass }}
+        run: python scripts/run_request.py --run-id "$RUN_ID" --start-mst "$START_MST" --end-mst "$END_MST" --basins "$BASINS" --stage soil
+      - name: Finalize
+        run: python scripts/run_request.py --run-id "$RUN_ID" --start-mst "$START_MST" --end-mst "$END_MST" --basins "$BASINS" --stage finalize
+      - name: Publish to runs branch
+        if: always()
+        run: |
+          set -e
+          test -f "out/runs/$RUN_ID/run.json" || python - <<PY
+          import json, os, datetime
+          os.makedirs("out/runs/$RUN_ID", exist_ok=True)
+          json.dump({"run_id": "$RUN_ID", "ok": False, "error": "The analysis stopped before finishing (see the workflow log).",
+                     "finished_utc": datetime.datetime.now(datetime.timezone.utc).isoformat()},
+                    open("out/runs/$RUN_ID/run.json", "w"))
+          PY
+          git config --global user.name "azstorm-bot"
+          git config --global user.email "actions@users.noreply.github.com"
+          for i in 1 2 3 4 5 6; do
+            rm -rf ../runs-wt
+            if git fetch --depth 1 origin runs 2>/dev/null; then
+              git worktree add -f ../runs-wt FETCH_HEAD
+              (cd ../runs-wt && git checkout -B runs)
+            else
+              git worktree add -f --detach ../runs-wt
+              (cd ../runs-wt && git checkout --orphan runs && git rm -rfq . && git clean -fdq)
+            fi
+            mkdir -p ../runs-wt/runs
+            rm -rf "../runs-wt/runs/$RUN_ID"
+            cp -r "out/runs/$RUN_ID" "../runs-wt/runs/$RUN_ID"
+            python scripts/prune_runs.py ../runs-wt/runs
+            (cd ../runs-wt && git add -A && git commit -qm "run $RUN_ID [${{ github.run_id }}]" && git push origin runs) && break
+            git worktree remove -f ../runs-wt || true
+            sleep $((i * 4))
+          done

@@ -41,7 +41,7 @@ from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import pandas as pd
 
-VERSION = "3.3.0"
+VERSION = "3.4.0"
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 
@@ -650,10 +650,56 @@ def _fetch_mrlc_wms(grid, layer):
     return cls
 
 
+def annual_nlcd_ids(ctx):
+    """{year: (landcover_id, impervious_id)} from the MRLC WCS capabilities (Annual NLCD, 1985 on).
+    Cached for the run. {} if the listing fails."""
+    if "_annual_nlcd" in ctx:
+        return ctx["_annual_nlcd"]
+    out = {}
+    try:
+        raw = http_get("https://www.mrlc.gov/geoserver/mrlc_download/wcs",
+                       dict(service="WCS", version="2.0.1", request="GetCapabilities"), timeout=120, binary=False)
+        txt = raw if isinstance(raw, str) else raw.decode("utf-8", "ignore")
+        ids = set(re.findall(r"<wcs:CoverageId>([^<]+)</wcs:CoverageId>", txt))
+        lcs, ims = {}, {}
+        for i in ids:
+            m = re.search(r"Annual_NLCD_LndCov_(\d{4})_CU", i)
+            if m:
+                lcs[int(m.group(1))] = max(lcs.get(int(m.group(1)), ""), i)
+            m = re.search(r"Annual_NLCD_FctImp_(\d{4})_CU", i)
+            if m:
+                ims[int(m.group(1))] = max(ims.get(int(m.group(1)), ""), i)
+        out = {y: (lcs[y], ims.get(y)) for y in lcs}
+        log(f"  Annual NLCD on MRLC WCS: {min(out) if out else '-'}-{max(out) if out else '-'} ({len(out)} years)")
+    except Exception as e:
+        log(f"  Annual NLCD listing failed ({e}); using the fixed NLCD layers")
+    ctx["_annual_nlcd"] = out
+    return out
+
+
 def get_landcover(grid, bcfg, ctx):
-    """NLCD class + impervious fraction on grid. Order: local tif > MRLC WCS > MRLC WMS > default."""
+    """NLCD class + impervious fraction on grid. Order: local tif > Annual NLCD for the event year
+    (MRLC WCS) > fixed NLCD WCS > WMS > default."""
     lc = ctx["cfg"]["common"]["landcover"]
     cls, imp, src = None, None, ""
+    yr = ctx.get("event_year")
+    if cls is None and lc.get("annual", False) and yr and not find_file(ctx["base"], bcfg.get("nlcd_tif")):
+        ids = annual_nlcd_ids(ctx)
+        ys = [y for y in ids if y <= yr] or sorted(ids)[:1]
+        if ys:
+            y = max(ys)
+            try:
+                cls = _fetch_mrlc_wcs(grid, ids[y][0]).astype(int)
+                src = f"Annual NLCD {y} land cover (MRLC WCS {ids[y][0]})" + ("" if y == yr else f"; latest year on or before the {yr} event")
+                if ids[y][1]:
+                    try:
+                        imp = _fetch_mrlc_wcs(grid, ids[y][1]).astype(float)
+                        src += f"; impervious Annual NLCD {y}"
+                    except Exception as e:
+                        log(f"  Annual NLCD impervious failed ({e})")
+            except Exception as e:
+                log(f"  Annual NLCD {y} failed ({e}); trying fixed NLCD")
+                cls = None
     p = find_file(ctx["base"], bcfg.get("nlcd_tif"))
     if p:
         cls, src = read_tif_to_grid(p, grid).astype(int), f"local {os.path.basename(p)}"
@@ -672,7 +718,7 @@ def get_landcover(grid, bcfg, ctx):
     p = find_file(ctx["base"], bcfg.get("impervious_tif"))
     if p:
         imp = read_tif_to_grid(p, grid).astype(float)
-    if imp is None:
+    if imp is None and not src.startswith("Annual"):
         try:
             imp = _fetch_mrlc_wcs(grid, lc["wcs_impervious"]).astype(float)
         except Exception as e:
@@ -833,11 +879,22 @@ class Window:
 
 
 def _mrms_urls(product, t):
+    """Candidate URLs for one MRMS file. AWS (from 2020-10-14) first; IEM mtarchive (pre-v12 names
+    such as GaugeCorr_QPE_01H) first for older dates."""
+    try:
+        from .mrms import AWS_START, IEM_ALIASES
+    except ImportError:  # standalone use of this module
+        AWS_START, IEM_ALIASES = pd.Timestamp("2020-10-14", tz="UTC"), {}
     d = t.strftime("%Y%m%d")
     hms = t.strftime("%H%M%S")
     pn = product.replace("_00.00", "")
-    return [MRMS_AWS.format(p=product, d=d, hms=hms),
-            MRMS_IEM.format(Y=t.strftime("%Y"), m=t.strftime("%m"), dd=t.strftime("%d"), pn=pn, p=product, d=d, hms=hms)]
+    lvl = product[len(pn) + 1:] if product != pn else "00.00"
+    ymd = dict(Y=t.strftime("%Y"), m=t.strftime("%m"), dd=t.strftime("%d"), d=d, hms=hms)
+    aws = [MRMS_AWS.format(p=product, d=d, hms=hms)]
+    iem = [MRMS_IEM.format(pn=a, p=f"{a}_{lvl}", **ymd) for a in IEM_ALIASES.get(product, [pn])]
+    old = pd.Timestamp(t).tz_convert("UTC") < pd.Timestamp(AWS_START) if pd.Timestamp(t).tzinfo else \
+        pd.Timestamp(t).tz_localize("UTC") < pd.Timestamp(AWS_START)
+    return iem + aws if old else aws + iem
 
 
 def decode_grib_window(raw, win):
@@ -1770,7 +1827,7 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
     ctx = ctx or {}
     ctx.setdefault("cache", os.path.join(base, "cache"))
     os.makedirs(ctx["cache"], exist_ok=True)
-    ctx.update(cfg=cfg, base=base)
+    ctx.update(cfg=cfg, base=base, event_year=int(ev["t0"].tz_convert(ev["tz"]).year))
     outdir = os.path.join(outroot, key)
     os.makedirs(outdir, exist_ok=True)
     flags, sources = [], {}
@@ -1881,6 +1938,9 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
     times_h = hour_range(ev["t0"], ev["t1"])
     Ph, miss_h = get_mrms(mr["pass2_01h"], times_h, win, ctx)
     sources["Radar"] = "MRMS MultiSensor QPE Pass 2 01H (1 km)"
+    if ev["t0"] < pd.Timestamp("2020-10-14", tz="UTC"):
+        sources["Radar"] = ("MRMS gauge-corrected hourly QPE (pre-v12 GaugeCorr_QPE_01H, via Iowa Environmental "
+                            "Mesonet archive; MultiSensor Pass 2 began Oct 2020) (1 km)")
     if miss_h.any():
         flags.append(f"{int(miss_h.sum())} of {len(times_h)} MRMS Pass 2 hours missing (treated as 0).")
     Ph = np.nan_to_num(Ph)
@@ -2349,8 +2409,12 @@ def preflight(config="basins.json"):
     return ok
 
 
-def run_event(basin_keys, event_key, config="basins.json", outroot="outputs", cache=None):
+def run_event(basin_keys, event_key, config="basins.json", outroot="outputs", cache=None, event=None):
+    """Run basins for an event. `event` (dict with start_local/end_local[/tz/label]) defines an
+    ad-hoc event under `event_key` without editing the config file (used by on-demand runs)."""
     cfg = load_config(config)
+    if event is not None:
+        cfg.setdefault("events", {})[event_key] = event
     if basin_keys in (None, "all"):
         basin_keys = list(cfg["basins"].keys())
     exts = []

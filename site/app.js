@@ -112,7 +112,7 @@
   async function loadEvent(ev) {
     stop();
     $("side").innerHTML = '<div class="loading">Loading ' + ev.name + "…</div>";
-    S.base = "data/" + ev.path.replace(/^data\//, "") + "/";
+    S.base = ev.base || ("data/" + ev.path.replace(/^data\//, "") + "/");
     const [meta, fr] = await Promise.all([getJSON(S.base + "meta.json"), getJSON(S.base + "frames.json")]);
     const [dbz, int] = await Promise.all([unpack(fr.dbz), unpack(fr.int)]);
     S.meta = meta; S.dbz = dbz; S.int = int;
@@ -125,6 +125,10 @@
     } catch (e) { /* model not run for this event */ }
     S.soil = null;
     try { S.soil = await getJSON(S.base + "soil.json"); } catch (e) { /* no SMAP check yet */ }
+    // older (pre-Oct 2020) archive windows may have no reflectivity: show rain rate instead
+    if (meta.qa && meta.qa.reflectivity_frames_missing >= meta.steps_utc.length && S.radar === "dbz") {
+      const b = document.querySelector('.seg button[data-r="int"]'); if (b) b.click();
+    }
     const g = meta.grid; canvas.width = g.nx; canvas.height = g.ny;
     radarOverlay.setBounds([[g.lat0 - (g.ny - 1) * g.d - g.d / 2, g.lon0 - g.d / 2], [g.lat0 + g.d / 2, g.lon0 + (g.nx - 1) * g.d + g.d / 2]]);
     $("evinfo").textContent = `${tmst(meta.start_utc)} – ${tmst(meta.end_utc)} · ${meta.steps_utc.length} × ${meta.step_min}-min steps · updated ${tmst(meta.generated_utc)}`;
@@ -409,16 +413,42 @@
     if (e.key === "ArrowRight") { stop(); setStep(S.step + 1); } else if (e.key === "ArrowLeft") { stop(); setStep(S.step - 1); } else if (e.key === " ") { e.preventDefault(); play(); } });
   let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (S.meta) { buildChart(); } }, 200); });
 
+  // ---- event list (archived events, live window, the user's on-demand analyses) ----------
+  let IDX = { events: [] };
+  function fillSelect(selected) {
+    const sel = $("event"); sel.innerHTML = "";
+    const groups = [["Events", IDX.events.filter((e) => !e.live && !e.run)], ["Live", IDX.events.filter((e) => e.live)],
+      ["Your analyses", IDX.events.filter((e) => e.run)]];
+    groups.forEach(([label, list]) => {
+      if (!list.length) return;
+      const g = document.createElement("optgroup"); g.label = label;
+      list.forEach((e) => { const o = document.createElement("option"); o.value = e.id; o.textContent = e.live ? "● Live – " + e.name : e.name; g.appendChild(o); });
+      sel.appendChild(g);
+    });
+    if (selected) sel.value = selected;
+  }
+  function setHash(h) { try { history.replaceState(null, "", "#" + h); } catch (er) { /* sandboxed */ } }
+  /** Show an on-demand run (called by runs.js when a run is finished). */
+  function openRun(id, name, base) {
+    let e = IDX.events.find((x) => x.id === id);
+    if (!e) { e = { id, name, run: true, base }; IDX.events.push(e); }
+    fillSelect(id); setHash("run=" + id);
+    return loadEvent(e);
+  }
+  window.AZApp = { openRun, setSide: (html) => { stop(); $("side").innerHTML = html; }, tmst, hasEvent: () => !!S.meta };
+
   (async function main() {
     await initMap();
-    let idx;
-    try { idx = await getJSON("data/events.json"); } catch (e) { $("side").innerHTML = '<div class="loading">No data published yet.</div>'; return; }
+    try { IDX = await getJSON("data/events.json"); } catch (e) { IDX = { events: [] }; }
+    const saved = (window.AZRuns && window.AZRuns.saved()) || [];
+    saved.forEach((r) => IDX.events.push({ id: r.id, name: r.name, run: true, base: window.AZRuns.base(r.id) }));
+    const hash = (location.hash || "").replace("#", "");
     const sel = $("event");
-    idx.events.forEach((e) => { const o = document.createElement("option"); o.value = e.id; o.textContent = e.live ? "● Live – " + e.name : e.name; sel.appendChild(o); });
-    const pick = (location.hash || "").replace("#", "");
-    const ev0 = idx.events.find((e) => e.id === pick) || idx.events.find((e) => !e.live) || idx.events[0];
-    sel.value = ev0.id;
-    sel.onchange = () => { const e = idx.events.find((x) => x.id === sel.value); try { location.hash = e.id.replace(/[^A-Za-z0-9-]/g, "-"); } catch (er) { /* sandboxed */ } loadEvent(e).catch(err); };
+    sel.onchange = () => { const e = IDX.events.find((x) => x.id === sel.value); setHash(e.run ? "run=" + e.id : e.id.replace(/[^A-Za-z0-9-]/g, "-")); loadEvent(e).catch(err); };
+    if (hash.startsWith("run=") && window.AZRuns) { fillSelect(); window.AZRuns.resume(hash.slice(4)); return; }
+    if (!IDX.events.length) { $("side").innerHTML = '<div class="loading">No data published yet.</div>'; return; }
+    const ev0 = IDX.events.find((e) => e.id === hash) || IDX.events.find((e) => !e.live && !e.run) || IDX.events[0];
+    fillSelect(ev0.id);
     loadEvent(ev0).catch(err);
   })();
   function err(e) { console.error(e); $("side").innerHTML = `<div class="note">Could not load data: ${e.message}</div>`; }

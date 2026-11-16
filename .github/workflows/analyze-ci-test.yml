@@ -1,0 +1,55 @@
+name: Analyze CI test
+# Temporary: exercises scripts/run_request.py on the feature branch (workflow_dispatch only works
+# from the default branch). Commits logs to ci-logs/ on the branch. Delete before merging.
+on:
+  push:
+    branches: ["v4-dynamic"]
+    paths: ["azstorm/**", "scripts/**", "config/**", ".github/workflows/analyze-ci-test.yml"]
+permissions:
+  contents: write
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        case:
+          - {id: ci-pre2020, start: "2018-07-27T14:00", end: "2018-07-27T20:00", basins: "mountain_dell"}
+          - {id: ci-recent, start: "2026-11-01T03:00", end: "2026-11-01T09:00", basins: "mountain_dell"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12", cache: pip}
+      - run: pip install -r requirements.txt
+      - name: Probe archives
+        run: |
+          mkdir -p ci-logs/${{ matrix.case.id }}
+          exec > >(tee ci-logs/${{ matrix.case.id }}/probe.txt) 2>&1
+          for d in 2018/07/27 2016/01/15 2019/09/01; do
+            echo "== IEM $d"; curl -s "https://mtarchive.geol.iastate.edu/$d/mrms/ncep/" | grep -o 'href="[A-Za-z_0-9]*/"' | tr '\n' ' '; echo
+          done
+          echo "== MRLC annual NLCD coverages"
+          curl -s "https://www.mrlc.gov/geoserver/mrlc_download/wcs?service=WCS&version=2.0.1&request=GetCapabilities" | grep -o "<wcs:CoverageId>[^<]*Annual[^<]*</wcs:CoverageId>" | sed 's/<[^>]*>//g' | sort | tr '\n' ' ' | head -c 4000; echo
+      - name: Run request
+        continue-on-error: true
+        run: |
+          exec > >(tee ci-logs/${{ matrix.case.id }}/request_log.txt) 2>&1
+          for st in validate radar model finalize; do
+            python scripts/run_request.py --run-id ${{ matrix.case.id }} --start-mst ${{ matrix.case.start }} --end-mst ${{ matrix.case.end }} --basins ${{ matrix.case.basins }} --stage $st || echo "stage $st exit $?"
+          done
+      - name: Commit logs
+        if: always()
+        run: |
+          mkdir -p ci-logs/${{ matrix.case.id }}
+          d=out/runs/${{ matrix.case.id }}
+          cp $d/run.json $d/stages.json ci-logs/${{ matrix.case.id }}/ 2>/dev/null || true
+          cp $d/model/run_log.txt ci-logs/${{ matrix.case.id }}/ 2>/dev/null || true
+          python - <<PY > ci-logs/${{ matrix.case.id }}/meta_summary.json || true
+          import json; m = json.load(open("$d/meta.json"))
+          print(json.dumps({"qa": m["qa"], "basins": [{"id": b["id"], "summary": b["summary"]} for b in m["basins"]]}, indent=1, default=str))
+          PY
+          for b in $d/model/*/summary.json; do python -c "import json,sys;d=json.load(open('$b'));print(json.dumps({k:d.get(k) for k in ['sources','flags','storm','flood']},indent=1,default=str)[:6000])" > ci-logs/${{ matrix.case.id }}/model_$(basename $(dirname $b)).json; done 2>/dev/null || true
+          git config user.name "azstorm-bot"; git config user.email "actions@users.noreply.github.com"
+          git add ci-logs; git commit -qm "ci logs ${{ matrix.case.id }}" || exit 0
+          for i in 1 2 3 4; do git pull --rebase -q origin v4-dynamic && git push -q origin HEAD:v4-dynamic && break; sleep 5; done

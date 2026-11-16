@@ -11,6 +11,20 @@ Live site: https://azstormintel.com (GitHub Pages)
 |---|---|---|
 | **Build data** (`.github/workflows/build.yml`) | push to `config/`, `azstorm/`, `scripts/`, `data/`; or run manually | Basemap tiles → `site/tiles/`; archived radar events → `site/data/events/<id>/`; ModClark flood model → `site/data/events/<id>/model/`. Outputs are committed. |
 | **Deploy site** (`.github/workflows/pages.yml`) | every 30 min, after Build data, on `site/` changes | Builds a live 24-hour radar window (not committed) and publishes `site/` to Pages. |
+| **Analyze** (`.github/workflows/analyze.yml`) | started by the API Worker when a visitor clicks *New analysis* | Radar + ground conditions + flood model + SMAP for the visitor's window → `runs` branch, `runs/<id>/`. |
+| **Runs cleanup** (`.github/workflows/runs-cleanup.yml`) | weekly | Drops runs older than 45 days and squashes the `runs` branch. |
+
+### On-demand analyses (v3.4)
+Visitors pick a window (MST, back to Jan 1 ten years ago, up to 7 days) and basins. The API Worker
+(`worker/`, Cloudflare, free) validates the request and starts **Analyze**; the page shows the
+workflow steps live and loads the results into the same viewer when they're published (about
+5–20 min). Same window + basins → same run id, so repeats are instant. Setup: `worker/README.md`.
+
+Data for older windows: MRMS on AWS starts 2020-10-14; earlier radar comes from the Iowa
+Environmental Mesonet mtarchive (pre-v12 names, e.g. `GaugeCorr_QPE_01H` in place of Pass 2;
+reflectivity may be missing). Land cover and impervious area use the **Annual NLCD** year of the
+event (latest available on or before it); SSURGO, 3DEP and Atlas 14 are current editions;
+SMAP L4 covers 2015 on.
 
 ## Layout
 
@@ -26,6 +40,9 @@ azstorm/radar.py        5-min rain: PrecipRate timing scaled to Pass 2 hourly de
 azstorm/model.py        ModClark flood model (3DEP, NLCD, SSURGO, Atlas 14, MRMS)
 azstorm/frequency.py    StreamStats parsing, area transfer, return periods
 scripts/run_event.py    radar event or live window -> site/data/...
+scripts/run_request.py  on-demand run for a user window (stages: validate, radar, model, soil, finalize)
+config/limits.json      on-demand limits (shared with the Worker)
+worker/                 Cloudflare Worker API that starts Analyze runs and serves results
 scripts/run_model.py    flood model -> site/data/events/<id>/model/
 scripts/build_basemap.py  USGS (public-domain) basemap tiles for offline display
 site/                   static viewer (Leaflet, no build step)

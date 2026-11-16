@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 site/data/live/
 config/_smoke.json
+out/
+worker/node_modules/

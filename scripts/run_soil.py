@@ -19,14 +19,22 @@ sys.path.insert(0, ROOT)
 from azstorm import smap  # noqa: E402
 
 ap = argparse.ArgumentParser()
-ap.add_argument("--event", required=True)
+ap.add_argument("--event")
+ap.add_argument("--start-mst", help="ad-hoc event start (MST); with --out-dir")
+ap.add_argument("--out-dir")
+ap.add_argument("--basins", nargs="*")
 a = ap.parse_args()
 cfg = json.load(open(os.path.join(ROOT, "config", "basins.json")))
 mcfg = json.load(open(os.path.join(ROOT, "config", "model.json")))
-ev = next(e for e in cfg["events"] if e["id"] == a.event)
-# the model event that maps to this site event sets the antecedent time (rain start)
-mev = next((m for m in mcfg["events"].values() if m.get("site_event") == a.event), None)
-start_local = (mev or {}).get("start_local", ev["start_mst"])
+if a.basins:
+    cfg["basins"] = [b for b in cfg["basins"] if b["id"] in a.basins]
+if a.start_mst:
+    start_local = a.start_mst
+else:
+    ev = next(e for e in cfg["events"] if e["id"] == a.event)
+    # the model event that maps to this site event sets the antecedent time (rain start)
+    mev = next((m for m in mcfg["events"].values() if m.get("site_event") == a.event), None)
+    start_local = (mev or {}).get("start_local", ev["start_mst"])
 t_event = datetime.fromisoformat(start_local).replace(tzinfo=ZoneInfo("America/Phoenix")).astimezone(timezone.utc)
 
 basins = []
@@ -35,7 +43,8 @@ for b in cfg["basins"]:
     poly = unary_union([shape(f["geometry"]) for f in gj["features"] if f["geometry"]["type"] in ("Polygon", "MultiPolygon")])
     basins.append({"id": b["id"], "poly": poly, "bounds": poly.bounds})
 
-out_dir = os.path.join(ROOT, "site", "data", "events", a.event)
+out_dir = a.out_dir or os.path.join(ROOT, "site", "data", "events", a.event)
+os.makedirs(out_dir, exist_ok=True)
 lines = []
 
 
