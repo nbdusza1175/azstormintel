@@ -1,0 +1,186 @@
+{
+ "basin": {
+  "area_sqmi": 8.807300037362337,
+  "area_ref_sqmi": 8.566914975558308,
+  "source": "DEM delineation (priority-flood, D8)",
+  "area_note": "compare: reference polygon 8.57 sq mi",
+  "outlet_lat": 35.16358927183138,
+  "outlet_lon": -111.67777241184604,
+  "centroid_lat": 35.15966646068323,
+  "centroid_lon": -111.72000047525387,
+  "mean_elev_ft": 7185.679143159849,
+  "min_elev_ft": 6902.787236708984,
+  "max_elev_ft": 8040.463361943359,
+  "mean_slope_pct": 9.512212972466422,
+  "impervious_pct": 2.4591903835025515,
+  "hsg_pct": {
+   "A": 0.0,
+   "B": 0.4432111105265927,
+   "C": 84.75458993108528,
+   "D": 14.802198958388132
+  },
+  "unmapped_soils_pct": 0.29722762901783367
+ },
+ "sources": {
+  "DEM": "USGS 3DEP 10 m",
+  "Land cover": "Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious",
+  "Soils": "SSURGO via Soil Data Access",
+  "Precip frequency": "NOAA Atlas 14 PFDS (centroid)",
+  "Radar": "MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly"
+ },
+ "flags": [
+  "No peak-flow frequency statistics - flood return period not computed.",
+  "Cold season and mean elevation 7,186 ft: snow or frozen ground possible - CN losses may be wrong.",
+  "Grid Tc 2.48 h disagrees with FCDMC Tc 4.37 h (ratio 0.57)."
+ ],
+ "storm": {
+  "durations": [
+   {
+    "label": "15m",
+    "duration_hr": 0.25,
+    "depth_in": 0.08143613561664309,
+    "arf": 0.9612691963980354,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.32574454246657236,
+    "end_local": "2026-11-01 07:00:00-07:00"
+   },
+   {
+    "label": "30m",
+    "duration_hr": 0.5,
+    "depth_in": 0.15510419583919233,
+    "arf": 0.9665695672715972,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.31020839167838465,
+    "end_local": "2026-11-01 07:00:00-07:00"
+   },
+   {
+    "label": "1h",
+    "duration_hr": 1.0,
+    "depth_in": 0.2556220778967939,
+    "arf": 0.9719369798304072,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.2556220778967939,
+    "end_local": "2026-11-01 07:00:00-07:00"
+   },
+   {
+    "label": "2h",
+    "duration_hr": 2.0,
+    "depth_in": 0.42035082428837045,
+    "arf": 0.977209930907901,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.21017541214418523,
+    "end_local": "2026-11-01 07:00:00-07:00"
+   },
+   {
+    "label": "3h",
+    "duration_hr": 3.0,
+    "depth_in": 0.5952835092703859,
+    "arf": 0.9801784191276232,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.19842783642346196,
+    "end_local": "2026-11-01 08:45:00-07:00"
+   },
+   {
+    "label": "6h",
+    "duration_hr": 6.0,
+    "depth_in": 1.0883346639415534,
+    "arf": 0.9849276843057218,
+    "T": 1.0037777128260548,
+    "q": "",
+    "intensity_inhr": 0.18138911065692556,
+    "end_local": "2026-11-01 11:30:00-07:00"
+   },
+   {
+    "label": "12h",
+    "duration_hr": 12.0,
+    "depth_in": 2.00142453149986,
+    "arf": 0.9891178698140188,
+    "T": 5.036927427466792,
+    "q": "",
+    "intensity_inhr": 0.16678537762498835,
+    "end_local": "2026-11-01 14:15:00-07:00"
+   },
+   {
+    "label": "24h",
+    "duration_hr": 24.0,
+    "depth_in": 2.9364229355924656,
+    "arf": 0.9926127726279385,
+    "T": 7.117083101186522,
+    "q": "",
+    "intensity_inhr": 0.12235095564968607,
+    "end_local": "2026-11-02 00:00:00-07:00"
+   }
+  ],
+  "tc_duration": {
+   "label": "Tc(2.50h)",
+   "duration_hr": 2.5,
+   "depth_in": 0.5028013818397027,
+   "arf": 0.9788576967064645,
+   "T": 1.0,
+   "q": "<",
+   "intensity_inhr": 0.2011205527358811,
+   "end_local": "2026-11-01 08:00:00-07:00"
+  },
+  "controlling": {
+   "label": "24h",
+   "duration_hr": 24.0,
+   "depth_in": 2.9364229355924656,
+   "arf": 0.9926127726279385,
+   "T": 7.117083101186522,
+   "q": "",
+   "intensity_inhr": 0.12235095564968607,
+   "end_local": "2026-11-02 00:00:00-07:00"
+  },
+  "total_in": 2.936422935592465,
+  "max_1hr_in": 0.25562207789679403,
+  "resolution": "15 min",
+  "headline": "~7.1-yr storm at 24h (2.94 in)",
+  "radaronly_total_in": 1.9642953696888157,
+  "pass2_vs_radaronly": 1.4948988736137245,
+  "motion": {
+   "bearing_deg": 36.16600910142239,
+   "flowpath_bearing_deg": 80.86761675950788,
+   "relation": "with the flowpath (peaks stack)"
+  }
+ },
+ "flood": {
+  "peak_cfs": 478.3447328039083,
+  "T": NaN,
+  "q": "",
+  "T_lo": null,
+  "T_hi": null,
+  "headline": "Peak ~ 478 cfs (no peak-flow statistics loaded)",
+  "range_text": "Upload StreamStats peak-flow CSV to get a return period.",
+  "rarity_text": "n/a",
+  "stats": null,
+  "arc_band": {
+   "I": {
+    "peak_cfs": 116.93613228328488,
+    "cn_mean": 55.773273755433785,
+    "excess_in": 0.21104415090543904,
+    "T": NaN,
+    "q": ""
+   },
+   "II": {
+    "peak_cfs": 478.3447328039083,
+    "cn_mean": 74.87571650270924,
+    "excess_in": 0.9250432840330209,
+    "T": NaN,
+    "q": ""
+   },
+   "III": {
+    "peak_cfs": 808.514560711436,
+    "cn_mean": 87.22014292060388,
+    "excess_in": 1.7028070380621179,
+    "T": NaN,
+    "q": ""
+   }
+  },
+  "band_text": "Antecedent band: ARC I 117 cfs | ARC II 478 cfs | ARC III 809 cfs"
+ }
+}
