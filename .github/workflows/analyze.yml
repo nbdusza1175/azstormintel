@@ -15,8 +15,11 @@ on:
         description: "end, MST (YYYY-MM-DDTHH:MM)"
         required: true
       basins:
-        description: "comma-separated basin ids from config/basins.json"
+        description: "comma-separated basin ids from config/basins.json (empty with custom_basin)"
         default: "fort_valley,mountain_dell"
+      custom_basin:
+        description: "uploaded basin as JSON {name, geometry, outlet, streamstats_csv} (empty = preset basins)"
+        default: ""
 permissions:
   contents: write
 concurrency:
@@ -31,6 +34,7 @@ jobs:
       START_MST: ${{ inputs.start_mst }}
       END_MST: ${{ inputs.end_mst }}
       BASINS: ${{ inputs.basins }}
+      CUSTOM_BASIN: ${{ inputs.custom_basin }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

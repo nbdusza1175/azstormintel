@@ -84,6 +84,11 @@ export function validateRequest(body, limits, basinIds, now = new Date()) {
   if (start < minStart) return { error: `Start must be on or after Jan 1, ${nowMst.getUTCFullYear() - limits.back_years}.` };
   if (end > new Date(now.getTime() - limits.latency_min * 60000))
     return { error: `End must be at least ${limits.latency_min} minutes ago (radar latency).` };
+  if (body.basin) {
+    const b = validateBasin(body.basin, limits);
+    if (b.error) return b;
+    return { start, end, basins: ["upload"], custom: b.json, start_mst: body.start_mst, end_mst: body.end_mst };
+  }
   const basins = [...new Set((Array.isArray(body.basins) ? body.basins : String(body.basins || "").split(","))
     .map((b) => String(b).trim()).filter(Boolean))].sort();
   if (!basins.length) return { error: "Choose at least one basin." };
@@ -92,9 +97,49 @@ export function validateRequest(body, limits, basinIds, now = new Date()) {
   return { start, end, basins, start_mst: body.start_mst, end_mst: body.end_mst };
 }
 
+/** Geodesic area (sq mi) of a GeoJSON Polygon/MultiPolygon (lon/lat, holes subtracted). */
+export function areaSqmi(geom) {
+  const R = 6378137, rad = Math.PI / 180;
+  const ring = (c) => { let a = 0; for (let i = 0; i < c.length - 1; i++) {
+    const [x1, y1] = c[i], [x2, y2] = c[i + 1]; a += (x2 - x1) * rad * (2 + Math.sin(y1 * rad) + Math.sin(y2 * rad)); }
+    return Math.abs(a * R * R / 2); };
+  const poly = (p) => ring(p[0]) - p.slice(1).reduce((s, h) => s + ring(h), 0);
+  const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.coordinates;
+  return polys.reduce((s, p) => s + poly(p), 0) / 2589988.11;
+}
+
+/** Validate an uploaded basin {name, geometry, outlet, streamstats_csv}. Returns {error} or {json}. */
+export function validateBasin(b, limits) {
+  if (!b || typeof b !== "object") return { error: "Missing basin." };
+  const g = b.geometry;
+  if (!g || !["Polygon", "MultiPolygon"].includes(g.type) || !Array.isArray(g.coordinates))
+    return { error: "The basin must be a polygon (StreamStats watershed)." };
+  const polys = g.type === "Polygon" ? [g.coordinates] : g.coordinates;
+  const [W, S, E, N] = limits.region_bbox;
+  let n = 0;
+  for (const p of polys) for (const r of p) {
+    if (!Array.isArray(r) || r.length < 4) return { error: "The basin polygon is malformed." };
+    for (const pt of r) {
+      n++;
+      if (!Array.isArray(pt) || !isFinite(pt[0]) || !isFinite(pt[1])) return { error: "The basin polygon has bad coordinates." };
+      if (pt[0] < W || pt[0] > E || pt[1] < S || pt[1] > N) return { error: `The basin must lie within ${limits.region_name}.` };
+    }
+  }
+  const a = areaSqmi(g);
+  if (a > limits.max_area_sqmi) return { error: `The basin is ${a.toFixed(1)} sq mi; the limit is ${limits.max_area_sqmi} sq mi.` };
+  if (a < limits.min_area_sqmi) return { error: "The basin is too small to analyse." };
+  let outlet = null;
+  if (Array.isArray(b.outlet) && isFinite(b.outlet[0]) && isFinite(b.outlet[1])) outlet = [+(+b.outlet[0]).toFixed(6), +(+b.outlet[1]).toFixed(6)];
+  const name = String(b.name || "Uploaded basin").replace(/[^\w .,()'&/-]/g, "").slice(0, 60).trim() || "Uploaded basin";
+  const csv = String(b.streamstats_csv || "").slice(0, limits.max_csv_chars);
+  const json = JSON.stringify({ name, geometry: g, outlet, streamstats_csv: csv });
+  if (json.length > limits.max_basin_json_chars) return { error: "The basin outline is too detailed to send; simplify it and try again." };
+  return { json, area: a, vertices: n };
+}
+
 /** Deterministic id: same window + basins + pipeline version -> same run. */
 export async function runId(v, version) {
-  const key = JSON.stringify([version, v.start_mst, v.end_mst, v.basins]);
+  const key = JSON.stringify([version, v.start_mst, v.end_mst, v.basins, v.custom || ""]);
   const h = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(key)));
   return "r" + [...h.slice(0, 7)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
@@ -225,7 +270,9 @@ export default {
       }
       if (p === "/api/runs" && req.method === "POST") {
         let body;
-        try { body = await req.json(); } catch { return json({ error: "Body must be JSON." }, 400, cors); }
+        const txt = await req.text();
+        if (txt.length > 200000) return json({ error: "Request too large." }, 413, cors);
+        try { body = JSON.parse(txt); } catch { return json({ error: "Body must be JSON." }, 400, cors); }
         const cfg = await siteConfig(env);
         const v = validateRequest(body, cfg.limits, cfg.basins.map((b) => b.id));
         if (v.error) return json({ error: v.error }, 400, cors);
@@ -240,7 +287,7 @@ export default {
         const d = await gh(env, `/repos/${env.REPO}/actions/workflows/${WORKFLOW}/dispatches`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ref: env.REF || "main", inputs: { run_id: id, start_mst: v.start_mst, end_mst: v.end_mst, basins: v.basins.join(",") } }),
+          body: JSON.stringify({ ref: env.REF || "main", inputs: { run_id: id, start_mst: v.start_mst, end_mst: v.end_mst, basins: v.custom ? "" : v.basins.join(","), custom_basin: v.custom || "" } }),
         });
         if (d.status !== 204 && d.status !== 200) return json({ error: `Could not start the analysis (GitHub ${d.status}).` }, 502, cors);
         return json({ id, state: "queued" }, 202, cors);

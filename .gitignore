@@ -5,3 +5,6 @@ site/data/live/
 config/_smoke.json
 out/
 worker/node_modules/
+config/_run_*
+data/basins/_run_*
+data/streamstats/_run_*

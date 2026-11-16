@@ -23,8 +23,9 @@ ap.add_argument("--event")
 ap.add_argument("--start-mst", help="ad-hoc event start (MST); with --out-dir")
 ap.add_argument("--out-dir")
 ap.add_argument("--basins", nargs="*")
+ap.add_argument("--config", default=os.path.join(ROOT, "config", "basins.json"))
 a = ap.parse_args()
-cfg = json.load(open(os.path.join(ROOT, "config", "basins.json")))
+cfg = json.load(open(a.config))
 mcfg = json.load(open(os.path.join(ROOT, "config", "model.json")))
 if a.basins:
     cfg["basins"] = [b for b in cfg["basins"] if b["id"] in a.basins]
@@ -39,7 +40,7 @@ t_event = datetime.fromisoformat(start_local).replace(tzinfo=ZoneInfo("America/P
 
 basins = []
 for b in cfg["basins"]:
-    gj = json.load(open(os.path.join(ROOT, b["polygon"])))
+    gj = json.load(open(b["polygon"] if os.path.isabs(b["polygon"]) else os.path.join(ROOT, b["polygon"])))
     poly = unary_union([shape(f["geometry"]) for f in gj["features"] if f["geometry"]["type"] in ("Polygon", "MultiPolygon")])
     basins.append({"id": b["id"], "poly": poly, "bounds": poly.bounds})
 

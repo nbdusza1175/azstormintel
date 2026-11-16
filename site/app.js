@@ -67,7 +67,8 @@
 
   // ---- map -----------------------------------------------------------------
   async function initMap() {
-    map = L.map("map", { zoomSnap: 0.25, minZoom: 8, maxZoom: 16, preferCanvas: false });
+    map = L.map("map", { zoomSnap: 0.25, minZoom: 6, maxZoom: 16, preferCanvas: false });
+    map.setView([34.3, -111.7], 7);  // Arizona; an event or upload zooms in
     map.attributionControl.setPrefix(false);
     const bases = {};
     let tilesMeta = null;
@@ -111,6 +112,9 @@
   // ---- event load -------------------------------------------------------------
   async function loadEvent(ev) {
     stop();
+    if (window.AZRuns) window.AZRuns.clearPreview();
+    document.querySelector(".timeline").hidden = false; $("legend").hidden = false;
+    document.querySelector(".mapctl").hidden = false;
     $("side").innerHTML = '<div class="loading">Loading ' + ev.name + "…</div>";
     S.base = ev.base || ("data/" + ev.path.replace(/^data\//, "") + "/");
     const [meta, fr] = await Promise.all([getJSON(S.base + "meta.json"), getJSON(S.base + "frames.json")]);
@@ -416,7 +420,7 @@
   // ---- event list (archived events, live window, the user's on-demand analyses) ----------
   let IDX = { events: [] };
   function fillSelect(selected) {
-    const sel = $("event"); sel.innerHTML = "";
+    const sel = $("event"); sel.innerHTML = '<option value="">— saved results —</option>';
     const groups = [["Events", IDX.events.filter((e) => !e.live && !e.run)], ["Live", IDX.events.filter((e) => e.live)],
       ["Your analyses", IDX.events.filter((e) => e.run)]];
     groups.forEach(([label, list]) => {
@@ -427,7 +431,7 @@
     });
     if (selected) sel.value = selected;
   }
-  function setHash(h) { try { history.replaceState(null, "", "#" + h); } catch (er) { /* sandboxed */ } }
+  function setHash(h) { try { history.replaceState(null, "", h ? "#" + h : location.pathname + location.search); } catch (er) { /* sandboxed */ } }
   /** Show an on-demand run (called by runs.js when a run is finished). */
   function openRun(id, name, base) {
     let e = IDX.events.find((x) => x.id === id);
@@ -435,7 +439,21 @@
     fillSelect(id); setHash("run=" + id);
     return loadEvent(e);
   }
-  window.AZApp = { openRun, setSide: (html) => { stop(); $("side").innerHTML = html; }, tmst, hasEvent: () => !!S.meta };
+  /** Blank map: no event loaded (the starting state; the New analysis form fills the side panel). */
+  function blank(keepHash) {
+    stop();
+    Object.values(cellLayers).forEach((l) => map.removeLayer(l)); cellLayers = {};
+    [outlineLayer, gaugeLayer].forEach((l) => l && map.removeLayer(l)); outlineLayer = gaugeLayer = null;
+    modelOverlays.forEach((o) => { layerCtl.removeLayer(o); map.removeLayer(o); }); modelOverlays = [];
+    radarOverlay.setBounds([[0, 0], [0, 0]]);
+    S.meta = null; S.models = {};
+    $("evinfo").textContent = ""; $("event").value = "";
+    document.querySelector(".timeline").hidden = true; $("legend").hidden = true;
+    document.querySelector(".mapctl").hidden = true;
+    if (!keepHash) setHash("");
+  }
+  window.AZApp = { openRun, blank, setSide: (html) => { stop(); $("side").innerHTML = html; }, tmst,
+    hasEvent: () => !!S.meta, map: () => map };
 
   (async function main() {
     await initMap();
@@ -444,12 +462,18 @@
     saved.forEach((r) => IDX.events.push({ id: r.id, name: r.name, run: true, base: window.AZRuns.base(r.id) }));
     const hash = (location.hash || "").replace("#", "");
     const sel = $("event");
-    sel.onchange = () => { const e = IDX.events.find((x) => x.id === sel.value); setHash(e.run ? "run=" + e.id : e.id.replace(/[^A-Za-z0-9-]/g, "-")); loadEvent(e).catch(err); };
-    if (hash.startsWith("run=") && window.AZRuns) { fillSelect(); window.AZRuns.resume(hash.slice(4)); return; }
-    if (!IDX.events.length) { $("side").innerHTML = '<div class="loading">No data published yet.</div>'; return; }
-    const ev0 = IDX.events.find((e) => e.id === hash) || IDX.events.find((e) => !e.live && !e.run) || IDX.events[0];
-    fillSelect(ev0.id);
-    loadEvent(ev0).catch(err);
+    sel.onchange = () => {
+      const e = IDX.events.find((x) => x.id === sel.value);
+      if (!e) { blank(); if (window.AZRuns) window.AZRuns.openForm(); return; }
+      setHash(e.run ? "run=" + e.id : e.id.replace(/[^A-Za-z0-9-]/g, "-")); loadEvent(e).catch(err);
+    };
+    fillSelect();
+    if (hash.startsWith("run=") && window.AZRuns) { blank(true); window.AZRuns.resume(hash.slice(4)); return; }
+    const ev0 = hash && IDX.events.find((e) => e.id === hash);
+    if (ev0) { fillSelect(ev0.id); loadEvent(ev0).catch(err); return; }
+    // default: blank map with the New analysis form
+    blank();
+    if (window.AZRuns) window.AZRuns.openForm();
   })();
   function err(e) { console.error(e); $("side").innerHTML = `<div class="note">Could not load data: ${e.message}</div>`; }
 })();

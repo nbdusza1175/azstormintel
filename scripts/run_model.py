@@ -26,9 +26,10 @@ ap.add_argument("--start-local", help="ad-hoc event start (MST, on the hour); wi
 ap.add_argument("--end-local")
 ap.add_argument("--label")
 ap.add_argument("--out", help="output dir (default site/data/events/<site_event>/model)")
+ap.add_argument("--config", default=os.path.join(ROOT, "config", "model.json"))
 a = ap.parse_args()
 
-cfg_path = os.path.join(ROOT, "config", "model.json")
+cfg_path = a.config
 if a.preflight:
     M.preflight(cfg_path)
 cfg = json.load(open(cfg_path))

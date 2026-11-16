@@ -5,5 +5,16 @@
   "min_hours": 1,
   "latency_min": 20,
   "max_concurrent_runs": 3,
-  "runs_keep_days": 45
+  "runs_keep_days": 45,
+  "max_area_sqmi": 150,
+  "min_area_sqmi": 0.05,
+  "region_bbox": [
+    -114.85,
+    31.3,
+    -109.03,
+    37.02
+  ],
+  "region_name": "Arizona",
+  "max_basin_json_chars": 58000,
+  "max_csv_chars": 12000
 }

@@ -430,6 +430,25 @@ def jump(rcv, steps):
     return P
 
 
+def auto_outlet(zf, pm, nx, res):
+    """Outlet for a polygon with no pour point: route to all polygon-edge cells and take the
+    edge cell with the largest contributing area."""
+    from scipy.ndimage import binary_erosion
+    edge = pm & ~binary_erosion(pm)
+    seeds = np.flatnonzero(edge).tolist()
+    if not seeds:
+        raise ValueError("polygon too small for the DEM grid")
+    filled, disc, _ = priority_flood(zf, pm, seeds, nx)
+    rcv = d8_receivers(filled, pm, disc, seeds, res).tolist()
+    acc = [1] * len(rcv)
+    for c in np.argsort(-filled.ravel(), kind="stable").tolist():
+        r = rcv[c]
+        if r >= 0:
+            acc[r] += acc[c]
+    acc = np.array(acc)
+    return int(seeds[int(np.argmax(acc[seeds]))])
+
+
 def terrain_model(grid, z, bcfg, ctx, polygon=None, outlet_xy=None):
     """Delineate (or constrain to polygon), route, return terrain dict."""
     ny, nx, res = grid.ny, grid.nx, grid.res
@@ -441,15 +460,18 @@ def terrain_model(grid, z, bcfg, ctx, polygon=None, outlet_xy=None):
         pm = rasterize([(polygon, 1)], out_shape=(ny, nx), transform=grid.transform, all_touched=False).astype(bool)
         pm &= valid
         # outlet = lowest cell inside polygon within snap radius of the point
-        r0, c0 = grid.rowcol(*outlet_xy)
-        rad = max(2, int(bcfg["snap_radius_m"] / res))
         best, oc = np.inf, None
-        for r in range(max(0, r0 - rad), min(ny, r0 + rad + 1)):
-            for c in range(max(0, c0 - rad), min(nx, c0 + rad + 1)):
-                if pm[r, c] and zf[r, c] < best:
-                    best, oc = zf[r, c], r * nx + c
+        if outlet_xy is not None:
+            r0, c0 = grid.rowcol(*outlet_xy)
+            rad = max(2, int(bcfg["snap_radius_m"] / res))
+            for r in range(max(0, r0 - rad), min(ny, r0 + rad + 1)):
+                for c in range(max(0, c0 - rad), min(nx, c0 + rad + 1)):
+                    if pm[r, c] and zf[r, c] < best:
+                        best, oc = zf[r, c], r * nx + c
         if oc is None:
-            raise ValueError("outlet not inside polygon")
+            # no usable outlet point: the polygon-edge cell that drains the most of the polygon
+            oc = auto_outlet(zf, pm, nx, res)
+            bcfg["_auto_outlet"] = True
         filled, disc, _ = priority_flood(zf, pm, [oc], nx)
         rcv = d8_receivers(filled, pm, disc, [oc], res)
         valid_dom = pm
@@ -1826,12 +1848,19 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
     crs = bc["crs"]
     to_utm = transformer("EPSG:4326", crs)
     to_ll = transformer(crs, "EPSG:4326")
-    olat, olon = bc["outlet"]
-    ox, oy = to_utm.transform(olon, olat)
-
     # ---- 1. grid, DEM, basin -------------------------------------------------
     poly_path = find_file(base, bc.get("polygon"))
     ref_poly = load_polygon(poly_path, crs) if poly_path else None
+    has_outlet = bc.get("outlet") is not None
+    if has_outlet:
+        olat, olon = bc["outlet"]
+        ox, oy = to_utm.transform(olon, olat)
+    elif ref_poly is not None:  # uploaded basin without a pour point: outlet found on the polygon edge
+        ox, oy = ref_poly.representative_point().coords[0]
+        bc["basin_source"] = "polygon"
+    else:
+        raise ValueError("basin needs an outlet point or a polygon")
+    oxy_in = (ox, oy) if has_outlet else None
     res = bc["dem_res_m"]
     if ref_poly is not None:
         xmin, ymin, xmax, ymax = ref_poly.bounds
@@ -1845,7 +1874,7 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
     sources["DEM"] = f"USGS 3DEP {res:g} m"
     mode = bc.get("basin_source", "auto")
     bc["_mode"] = "polygon" if mode == "polygon" else "delineate"
-    T = terrain_model(grid, z, bc, ctx, ref_poly, (ox, oy))
+    T = terrain_model(grid, z, bc, ctx, ref_poly, oxy_in)
     A_cell_ac = res * res / 4046.856
     area_d = T["inb"].sum() * A_cell_ac / 640
     area_ref = ref_poly.area / 2589988.11 if ref_poly is not None else None
@@ -1857,13 +1886,16 @@ def run_basin(key, cfg, event_key, outroot="outputs", ctx=None):
             flags.append(f"DEM delineation gave {area_d:.2f} sq mi vs reference polygon {area_ref:.2f} sq mi "
                          f"({diff * 100:.0f}% diff{', touches grid edge' if bad else ''}); routing constrained to the reference polygon.")
             bc["_mode"] = "polygon"
-            T = terrain_model(grid, z, bc, ctx, ref_poly, (ox, oy))
+            T = terrain_model(grid, z, bc, ctx, ref_poly, oxy_in)
             area_d = T["inb"].sum() * A_cell_ac / 640
         elif bad:
             flags.append("Delineated basin touches the grid edge - increase search_box_km.")
         if area_ref and diff > bc["area_tolerance"] and bc["_mode"] == "delineate":
             flags.append(f"Delineated area {area_d:.2f} sq mi differs {diff * 100:.0f}% from the reference polygon ({area_ref:.2f} sq mi).")
     src_txt = "DEM delineation (priority-flood, D8)" if bc["_mode"] == "delineate" else "reference polygon, D8 routing inside it"
+    if bc.get("_auto_outlet"):
+        flags.append("No usable pour point in the uploaded basin; the outlet was placed at the polygon-edge cell "
+                     "that drains the most area. Upload the StreamStats pour point for an exact outlet.")
     pub = bc.get("published_area_sqmi") or {}
     parts = [f"reference polygon {area_ref:.2f}" if area_ref else None] + [f"{k} {v:.2f}" for k, v in pub.items()]
     area_note = "compare: " + ", ".join(p for p in parts if p) + " sq mi" if any(parts) else ""

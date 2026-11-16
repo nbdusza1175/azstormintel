@@ -47,9 +47,10 @@ def main():
     ap.add_argument("--basins", nargs="*", help="basin ids (default: all in config/basins.json)")
     ap.add_argument("--name")
     ap.add_argument("--no-index", action="store_true", help="do not add the event to site/data/events.json")
+    ap.add_argument("--config", default=os.path.join(ROOT, "config", "basins.json"))
     args = ap.parse_args()
 
-    cfg = json.load(open(os.path.join(ROOT, "config", "basins.json")))
+    cfg = json.load(open(args.config))
     if args.live:
         end = datetime.now(timezone.utc).replace(second=0, microsecond=0)
         end -= timedelta(minutes=end.minute % 5 + 10)  # allow MRMS latency
@@ -76,13 +77,13 @@ def main():
     basins_out = []
     log_rows = []
     for b in cfg["basins"]:
-        gj = json.load(open(os.path.join(ROOT, b["polygon"])))
+        gj = json.load(open(b["polygon"] if os.path.isabs(b["polygon"]) else os.path.join(ROOT, b["polygon"])))
         cells = radar.basin_cells(gj, g)
         summary, ts, hb, cells_out, (fd, fi, fdbz) = radar.basin_stats(R, cells)
         freq = []
         for f in b.get("frequency", []):
             if f["basis"] == "streamstats":
-                p = os.path.join(ROOT, f["file"])
+                p = f["file"] if os.path.isabs(f["file"]) else os.path.join(ROOT, f["file"])
                 if not os.path.exists(p):
                     freq.append({**f, "missing": True})
                     continue
