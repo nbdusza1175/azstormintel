@@ -1,0 +1,67 @@
++ /opt/hostedtoolcache/Python/3.12.16/x64/bin/python scripts/run_event.py --event ci-pre2020 --name Jul 27, 2018 14:00–20:00 MST --start-mst 2018-07-27T14:00 --end-mst 2018-07-27T20:00 --out-dir /home/runner/work/azstormintel/azstormintel/out/runs/ci-pre2020 --no-index --basins mountain_dell
+listed PrecipRate 186, Pass2 6, refl 182, flag 182
+reading 336 files
+/home/runner/work/azstormintel/azstormintel/azstorm/radar.py:199: RuntimeWarning: All-NaN slice encountered
+  dbz_max = np.nanmax(np.where(dbz >= 5, dbz, np.nan), 1)
+radar built in 66s; QA {'precip_rate_scans_listed': 186, 'precip_rate_scans_missing': 0, 'pass2_hours_expected': 6, 'pass2_hours_found': 6, 'steps_with_missing_minutes': 0, 'reflectivity_frames_missing': 0, 'cells_factor_clipped': 4880, 'cells_even_spread': 0, 'archive': ['iem'], 'pass2_product': ['GaugeCorr_QPE_01H']}
+Mountain Dell (Sinclair Wash): 8.57 sq mi, total 0.41 in, peak 5-min 0.483 in/hr
+wrote /home/runner/work/azstormintel/azstormintel/out/runs/ci-pre2020 in 67s
++ /opt/hostedtoolcache/Python/3.12.16/x64/bin/python scripts/run_model.py --event ci-pre2020 --basins mountain_dell --start-local 2018-07-27T14:00 --end-local 2018-07-27T20:00 --label Jul 27, 2018 14:00–20:00 MST --out /home/runner/work/azstormintel/azstormintel/out/runs/ci-pre2020/model
+
+=== Mountain Dell (Sinclair Wash): Jul 27, 2018 14:00–20:00 MST ===
+  grid 1097 x 828 @ 10 m
+  DEM: USGS 3DEP 10 m via 3DEP ImageServer, 1097x828
+  basin 8.81 sq mi, Tc 5.63 h, R 3.53 h, L 7.19 mi; Tc path: sheet 0.34 h, shallow 0.21 h (0.42 mi), channel 5.07 h (6.75 mi), in DEM depressions 0.19 h
+  MRMS MultiSensor_QPE_01H_Pass2_00.00: downloading 6 of 6 files
+  MRMS RadarOnly_QPE_15M_00.00: downloading 24 of 24 files
+  MRMS RadarOnly_QPE_15M_00.00: 24 time steps missing
+  MRMS RadarOnly_QPE_01H_00.00: downloading 6 of 6 files
+  MRMS MultiSensor_QPE_24H_Pass2_00.00: downloading 60 of 60 files
+  ARC I: peak 1 cfs (bankfull pass 1); Tc 5.63 h, R 3.53 h, 0 kinematic iterations
+  ARC II: peak 9 cfs (bankfull pass 15); Tc 9.22 h, R 6.11 h, 9 kinematic iterations
+  ARC III: peak 109 cfs (bankfull pass 76); Tc 3.83 h, R 2.31 h, 7 kinematic iterations
+  MRMS PrecipFlag_00.00: downloading 2 of 2 files
+Mountain Dell (Sinclair Wash) - Jul 27, 2018 14:00–20:00 MST   (coconino_storm v3.4.0, ModClark + distributed CN)
+==============================================================================
+FLOOD INTENSITY : Peak ~ 9 cfs, about a <2-yr flood
+                  90% prediction range: <2-yr to <2-yr | area-transferred statistics
+STORM INTENSITY : ~<1-yr storm at 1h (0.23 in)
+                  total 0.43 in, wettest hour 0.23 in, flood vs rain rarity flood 2.0x the storm return period
+                  Antecedent band: ARC I 1 cfs (~<2-yr) | ARC II 9 cfs (~<2-yr) | ARC III 109 cfs (~<2-yr)
+ANTECEDENT      : ARC II by NEH-630 ARC II (median) with ARC I-III band
+                  API 1.46 in (normal), prior 5/7/20/60 d 0.09/0.16/4.57/5.07 in; NEH-4 5-day rule -> ARC I
+BASIN           : 8.81 sq mi delineated (DEM delineation (priority-flood, D8)); compare: reference polygon 8.56, USGS 09400650 8.11, FLO-2D IEA 8.80, StreamStats (pour point 35.16266,-111.68215) 5.82 sq mi
+                  mean elev 7,186 ft, mean slope 9.5%, impervious 2.4%
+TIMING          : Tc grid 9.22 h | Kirpich 2.14 h | FCDMC 6.34 h ; R 6.11 h (fcdmc)
+                  longest flowpath 7.19 mi at 85 ft/mi
+                  Tc path 7.19 mi, mean 1.1 ft/s: sheet 0.34 h | shallow 0.21 h (0.42 mi) | channel 8.67 h (6.75 mi) | in DEM depressions 0.36 h
+RUNOFF          : CN mean 74.9 (AMC II 74.9); excess 0.01 in of 0.43 in (ratio 0.03); volume 7 ac-ft
+PEAK            : 9 cfs at Jul 27 19:10 MST (translation only 34 cfs)
+CROSS-CHECKS    : lumped SCS UH 0 cfs | static rational (C=runoff ratio, i at Tc) 14 cfs | rain ceiling i(Tc)*A 408 cfs
+                  Tc/R by ARC: I 5.63/3.53 h (0 it) | II 9.22/6.11 h (9 it) | III 3.83/2.31 h (7 it); bankfull pass 5.63/3.53 h
+DESIGN CHECK    : NOAA Atlas 14 100-yr 24-hr, alternating block, ARF, AMC II: 4,432 cfs (Tc 1.66 h)
+                  vs IEA (FLO-2D) design, below Holmes Ave: 1,391 cfs (319%)
+                  vs IEA (FLO-2D) design, above Holmes Ave: 1,088 cfs (407%)
+                  vs FEMA FIS 100-yr at Palmer Ave: 470 cfs (943%)
+                  vs StreamStats natural 100-yr (area-transferred): 2,055 cfs (216%)
+CHANNEL         : event peak = 1% of the 1,391 cfs design flow
+
+Storm depths (basin average, max running window):
+      1h:  0.23 in  ARF 0.97  ~<1-yr
+      2h:  0.42 in  ARF 0.98  ~<1-yr
+      3h:  0.43 in  ARF 0.98  ~<1-yr
+      6h:  0.43 in  ARF 0.98  ~<1-yr
+
+Gauge checks (never used to adjust results):
+   rain Mt Dell rain: no data
+        - no file matching ['*mt*dell*rain*', '*mt*dell*', '*mtdell*', '*sinclair*']
+   stage 3403: no data
+        - no file matching *3403*
+
+Flags:
+   - MRMS 15-min RadarOnly >25% missing; hourly Pass 2 spread uniformly instead.
+   - Published statistics are for 5.82 sq mi; transferred to the delineated 8.81 sq mi by Q*(At/As)^0.6 (x1.28).
+   - Structure note (not modelled): Dam about 1.4 mi upstream of Mountain Dell (gauge 3403 reads its pool): 24 in CMP low outlet, spillway about 20 ft up. Below the spillway the release is roughly 40-50 cfs. Results are natural, unregulated flow.
+
+Data sources: DEM: USGS 3DEP 10 m; Land cover: Annual NLCD 2018 land cover, Collection 1.1 (USGS; COG mirror on source.coop); impervious: Annual NLCD 2018 fractional impervious; Soils: SSURGO via Soil Data Access; Precip frequency: NOAA Atlas 14 PFDS (centroid); Radar: MRMS gauge-corrected hourly QPE (pre-v12 GaugeCorr_QPE_01H, via Iowa Environmental Mesonet archive; MultiSensor Pass 2 began Oct 2020) (1 km)
+model done in 79s: mountain_dell

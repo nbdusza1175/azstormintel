@@ -1,0 +1,93 @@
+{
+ "qa": {
+  "precip_rate_scans_listed": 186,
+  "precip_rate_scans_missing": 0,
+  "pass2_hours_expected": 6,
+  "pass2_hours_found": 6,
+  "steps_with_missing_minutes": 0,
+  "reflectivity_frames_missing": 0,
+  "cells_factor_clipped": 4880,
+  "cells_even_spread": 0,
+  "archive": [
+   "iem"
+  ],
+  "pass2_product": [
+   "GaugeCorr_QPE_01H"
+  ]
+ },
+ "basins": [
+  {
+   "id": "mountain_dell",
+   "summary": {
+    "area_sqmi": 8.57,
+    "n_cells": 40,
+    "total_in": 0.41,
+    "max_cell_total_in": 1.04,
+    "peak_5min_inhr": 0.483,
+    "peak_5min_utc": "2018-07-27T22:45:00+00:00",
+    "worst_cell_5min_inhr": 2.165,
+    "max_area_ge_0_5_sqmi": 3.36,
+    "steps_ge_0_5": 15,
+    "any_cell_ge_1": true,
+    "snow_steps": 0,
+    "snow_max_pct": 0.0,
+    "durations": {
+     "5": {
+      "depth_in": 0.04,
+      "intensity_inhr": 0.483,
+      "end_utc": "2018-07-27T22:45:00+00:00",
+      "worst_cell_depth_in": 0.18,
+      "worst_cell_inhr": 2.165
+     },
+     "15": {
+      "depth_in": 0.101,
+      "intensity_inhr": 0.404,
+      "end_utc": "2018-07-27T21:55:00+00:00",
+      "worst_cell_depth_in": 0.507,
+      "worst_cell_inhr": 2.027
+     },
+     "30": {
+      "depth_in": 0.197,
+      "intensity_inhr": 0.394,
+      "end_utc": "2018-07-27T22:00:00+00:00",
+      "worst_cell_depth_in": 0.889,
+      "worst_cell_inhr": 1.779
+     },
+     "60": {
+      "depth_in": 0.28,
+      "intensity_inhr": 0.28,
+      "end_utc": "2018-07-27T22:25:00+00:00",
+      "worst_cell_depth_in": 0.964,
+      "worst_cell_inhr": 0.964
+     },
+     "120": {
+      "depth_in": 0.407,
+      "intensity_inhr": 0.204,
+      "end_utc": "2018-07-27T23:20:00+00:00",
+      "worst_cell_depth_in": null,
+      "worst_cell_inhr": null
+     },
+     "180": {
+      "depth_in": 0.409,
+      "intensity_inhr": 0.136,
+      "end_utc": "2018-07-28T00:00:00+00:00",
+      "worst_cell_depth_in": null,
+      "worst_cell_inhr": null
+     },
+     "360": {
+      "depth_in": 0.409,
+      "intensity_inhr": 0.068,
+      "end_utc": "2018-07-28T03:00:00+00:00",
+      "worst_cell_depth_in": null,
+      "worst_cell_inhr": null
+     }
+    },
+    "pass2_over_precip_rate": 0.59,
+    "factor_range": [
+     0.44,
+     0.76
+    ]
+   }
+  }
+ ]
+}

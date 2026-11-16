@@ -1,0 +1,180 @@
+{
+ "sources": {
+  "DEM": "USGS 3DEP 10 m",
+  "Land cover": "Annual NLCD 2018 land cover, Collection 1.1 (USGS; COG mirror on source.coop); impervious: Annual NLCD 2018 fractional impervious",
+  "Soils": "SSURGO via Soil Data Access",
+  "Precip frequency": "NOAA Atlas 14 PFDS (centroid)",
+  "Radar": "MRMS gauge-corrected hourly QPE (pre-v12 GaugeCorr_QPE_01H, via Iowa Environmental Mesonet archive; MultiSensor Pass 2 began Oct 2020) (1 km)"
+ },
+ "flags": [
+  "MRMS 15-min RadarOnly >25% missing; hourly Pass 2 spread uniformly instead.",
+  "Published statistics are for 5.82 sq mi; transferred to the delineated 8.81 sq mi by Q*(At/As)^0.6 (x1.28).",
+  "Structure note (not modelled): Dam about 1.4 mi upstream of Mountain Dell (gauge 3403 reads its pool): 24 in CMP low outlet, spillway about 20 ft up. Below the spillway the release is roughly 40-50 cfs. Results are natural, unregulated flow."
+ ],
+ "storm": {
+  "durations": [
+   {
+    "label": "1h",
+    "duration_hr": 1.0,
+    "depth_in": 0.22861723946482596,
+    "arf": 0.9719369798304072,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.22861723946482596,
+    "end_local": "2018-07-27 15:00:00-07:00"
+   },
+   {
+    "label": "2h",
+    "duration_hr": 2.0,
+    "depth_in": 0.41999308864470747,
+    "arf": 0.977209930907901,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.20999654432235373,
+    "end_local": "2018-07-27 16:00:00-07:00"
+   },
+   {
+    "label": "3h",
+    "duration_hr": 3.0,
+    "depth_in": 0.4307981824882232,
+    "arf": 0.9801784191276232,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.14359939416274106,
+    "end_local": "2018-07-27 17:00:00-07:00"
+   },
+   {
+    "label": "6h",
+    "duration_hr": 6.0,
+    "depth_in": 0.4307981824882232,
+    "arf": 0.9849276843057218,
+    "T": 1.0,
+    "q": "<",
+    "intensity_inhr": 0.07179969708137053,
+    "end_local": "2018-07-27 20:00:00-07:00"
+   }
+  ],
+  "tc_duration": {
+   "label": "Tc(6.00h)",
+   "duration_hr": 6.0,
+   "depth_in": 0.4307981824882232,
+   "arf": 0.9849276843057218,
+   "T": 1.0,
+   "q": "<",
+   "intensity_inhr": 0.07179969708137053,
+   "end_local": "2018-07-27 20:00:00-07:00"
+  },
+  "controlling": {
+   "label": "1h",
+   "duration_hr": 1.0,
+   "depth_in": 0.22861723946482596,
+   "arf": 0.9719369798304072,
+   "T": 1.0,
+   "q": "<",
+   "intensity_inhr": 0.22861723946482596,
+   "end_local": "2018-07-27 15:00:00-07:00"
+  },
+  "total_in": 0.4307981824882232,
+  "max_1hr_in": 0.22861723946482596,
+  "resolution": "hour",
+  "headline": "~<1-yr storm at 1h (0.23 in)",
+  "radaronly_total_in": 0.7743076079862158,
+  "pass2_vs_radaronly": 0.5563656847032973
+ },
+ "flood": {
+  "peak_cfs": 9.302676801993206,
+  "T": 2.0,
+  "q": "<",
+  "T_lo": [
+   2.0,
+   "<"
+  ],
+  "T_hi": [
+   2.0,
+   "<"
+  ],
+  "headline": "Peak ~ 9 cfs, about a <2-yr flood",
+  "range_text": "90% prediction range: <2-yr to <2-yr | area-transferred statistics",
+  "rarity_text": "flood 2.0x the storm return period",
+  "stats": {
+   "table": [
+    {
+     "T": 2.0,
+     "Q": 165.40231910702815,
+     "lo": 33.977995785552295,
+     "hi": 805.2143906915788
+    },
+    {
+     "T": 5.0,
+     "Q": 420.55783462872273,
+     "lo": 121.16681515979968,
+     "hi": 1461.6949130388534
+    },
+    {
+     "T": 10.0,
+     "Q": 680.8421042312553,
+     "lo": 223.10080251645655,
+     "hi": 2077.145402739423
+    },
+    {
+     "T": 25.0,
+     "Q": 1133.4546518652162,
+     "lo": 405.1715723862085,
+     "hi": 3167.0056449175154
+    },
+    {
+     "T": 50.0,
+     "Q": 1564.269994655615,
+     "lo": 569.2917029730271,
+     "hi": 4295.331542701893
+    },
+    {
+     "T": 100.0,
+     "Q": 2089.9672879415184,
+     "lo": 759.0556039640361,
+     "hi": 5757.026455740747
+    },
+    {
+     "T": 200.0,
+     "Q": 2731.0615480462784,
+     "lo": 973.1810868390261,
+     "hi": 7654.665465650837
+    },
+    {
+     "T": 500.0,
+     "Q": 3731.1685938097044,
+     "lo": 1265.5200694467967,
+     "hi": 11001.177503397685
+    }
+   ],
+   "source": "mountain_dell_streamstats.csv",
+   "area_sqmi": 5.82,
+   "transfer_note": "Published statistics are for 5.82 sq mi; transferred to the delineated 8.81 sq mi by Q*(At/As)^0.6 (x1.28).",
+   "region": "AZ Peak Region 2 Colorado Plateau (SIR 2014-5211)"
+  },
+  "arc_band": {
+   "I": {
+    "peak_cfs": 0.5966808565139504,
+    "cn_mean": 55.75348893720961,
+    "excess_in": 0.0006455073983560819,
+    "T": 2.0,
+    "q": "<"
+   },
+   "II": {
+    "peak_cfs": 9.302676801993206,
+    "cn_mean": 74.86289792554405,
+    "excess_in": 0.014857967510828081,
+    "T": 2.0,
+    "q": "<"
+   },
+   "III": {
+    "peak_cfs": 108.89775701545373,
+    "cn_mean": 87.21323212304347,
+    "excess_in": 0.07614511012246512,
+    "T": 2.0,
+    "q": "<"
+   }
+  },
+  "band_text": "Antecedent band: ARC I 1 cfs (~<2-yr) | ARC II 9 cfs (~<2-yr) | ARC III 109 cfs (~<2-yr)"
+ }
+}
