@@ -1,0 +1,105 @@
+
+=== Fort Valley (Rio de Flag @ Snowbowl Rd): Nov 1 16:00 – Nov 2, 2026 16:00 MST ===
+  grid 1371 x 1448 @ 10 m
+  basin 28.99 sq mi, Tc 5.18 h, R 2.42 h, L 11.74 mi; Tc path: sheet 0.30 h, shallow 0.28 h (0.61 mi), channel 4.60 h (5.22 mi), in DEM depressions 0.33 h
+  MRMS MultiSensor_QPE_24H_Pass2_00.00: downloading 2 of 60 files
+  ARC I: peak 0 cfs (bankfull pass 0); Tc 5.18 h, R 2.42 h, 0 kinematic iterations
+  ARC II: peak 1 cfs (bankfull pass 3); Tc 33.85 h, R 19.42 h, 8 kinematic iterations
+  ARC III: peak 38 cfs (bankfull pass 60); Tc 8.01 h, R 3.92 h, 9 kinematic iterations
+  MRMS PrecipFlag_00.00: downloading 3 of 4 files
+Fort Valley (Rio de Flag @ Snowbowl Rd) - Nov 1 16:00 – Nov 2, 2026 16:00 MST   (coconino_storm v3.4.0, ModClark + distributed CN)
+==============================================================================
+FLOOD INTENSITY : Peak ~ 1 cfs, about a <2-yr flood
+                  90% prediction range: <2-yr to <2-yr
+STORM INTENSITY : ~<1-yr storm at 15m (0.05 in)
+                  total 0.40 in, wettest hour 0.12 in, flood vs rain rarity flood 2.0x the storm return period
+                  Antecedent band: ARC I 0 cfs (~<2-yr) | ARC II 1 cfs (~<2-yr) | ARC III 38 cfs (~<2-yr)
+ANTECEDENT      : ARC II by NEH-630 ARC II (median) with ARC I-III band
+                  API 2.92 in (wet), prior 5/7/20/60 d 1.26/1.26/5.21/12.08 in; NEH-4 5-day rule -> ARC III
+BASIN           : 28.99 sq mi delineated (DEM delineation (priority-flood, D8)); compare: reference polygon 29.01, StreamStats 29.00 sq mi
+                  mean elev 8,127 ft, mean slope 15.6%, impervious 1.0%
+TIMING          : Tc grid 33.85 h | Kirpich 1.67 h | FCDMC 5.54 h ; R 19.42 h (fcdmc)
+                  longest flowpath 11.74 mi at 431 ft/mi
+                  Tc path 11.71 mi, mean 0.5 ft/s: sheet 0.12 h | shallow 0.06 h (0.40 mi) | channel 33.67 h (11.28 mi) | in DEM depressions 1.24 h
+RUNOFF          : CN mean 75.9 (AMC II 75.9); excess 0.00 in of 0.40 in (ratio 0.00); volume 2 ac-ft
+PEAK            : 1 cfs at Nov 03 08:15 MST (translation only 4 cfs)
+CROSS-CHECKS    : lumped SCS UH 0 cfs | static rational (C=runoff ratio, i at Tc) 1 cfs | rain ceiling i(Tc)*A 313 cfs
+                  Tc/R by ARC: I 5.18/2.42 h (0 it) | II 33.85/19.42 h (8 it) | III 8.01/3.92 h (9 it); bankfull pass 5.18/2.42 h
+
+Storm depths (basin average, max running window):
+     15m:  0.05 in  ARF 0.88  ~<1-yr
+     30m:  0.09 in  ARF 0.90  ~<1-yr
+      1h:  0.15 in  ARF 0.92  ~<1-yr
+      2h:  0.23 in  ARF 0.93  ~<1-yr
+      3h:  0.24 in  ARF 0.94  ~<1-yr
+      6h:  0.34 in  ARF 0.96  ~<1-yr
+     12h:  0.40 in  ARF 0.97  ~<1-yr
+     24h:  0.40 in  ARF 0.98  ~<1-yr
+
+Gauge checks (never used to adjust results):
+   rain 3406: no data
+        - no file matching *3406*
+   stage 3407: no data
+        - no file matching *3407*
+
+Flags:
+   - Cold season and mean elevation 8,127 ft: snow or frozen ground possible - CN losses may be wrong.
+   - Grid Tc 33.85 h disagrees with FCDMC Tc 5.54 h (ratio 6.11).
+   - Basin is 29.0 sq mi: single linear reservoir, no channel storage routing; treat peak as screening-level.
+
+Data sources: DEM: USGS 3DEP 10 m; Land cover: Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious; Soils: SSURGO (cache); Precip frequency: NOAA Atlas 14 PFDS (centroid); Radar: MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly
+
+=== Mountain Dell (Sinclair Wash): Nov 1 16:00 – Nov 2, 2026 16:00 MST ===
+  grid 1097 x 828 @ 10 m
+  basin 8.81 sq mi, Tc 5.63 h, R 3.53 h, L 7.19 mi; Tc path: sheet 0.34 h, shallow 0.21 h (0.42 mi), channel 5.07 h (6.75 mi), in DEM depressions 0.19 h
+  ARC I: peak 0 cfs (bankfull pass 0); Tc 5.63 h, R 3.53 h, 0 kinematic iterations
+  ARC II: peak 0 cfs (bankfull pass 0); Tc 5.63 h, R 3.53 h, 0 kinematic iterations
+  ARC III: peak 4 cfs (bankfull pass 9); Tc 13.00 h, R 8.95 h, 11 kinematic iterations
+  MRMS PrecipFlag_00.00: downloading 1 of 4 files
+Mountain Dell (Sinclair Wash) - Nov 1 16:00 – Nov 2, 2026 16:00 MST   (coconino_storm v3.4.0, ModClark + distributed CN)
+==============================================================================
+FLOOD INTENSITY : Peak ~ 0 cfs, about a <2-yr flood
+                  90% prediction range: <2-yr to <2-yr | area-transferred statistics
+STORM INTENSITY : ~<1-yr storm at 15m (0.07 in)
+                  total 0.41 in, wettest hour 0.17 in, flood vs rain rarity flood 2.0x the storm return period
+                  Antecedent band: ARC I 0 cfs (~<2-yr) | ARC II 0 cfs (~<2-yr) | ARC III 4 cfs (~<2-yr)
+ANTECEDENT      : ARC II by NEH-630 ARC II (median) with ARC I-III band
+                  API 3.45 in (wet), prior 5/7/20/60 d 1.39/1.39/6.39/13.69 in; NEH-4 5-day rule -> ARC III
+BASIN           : 8.81 sq mi delineated (DEM delineation (priority-flood, D8)); compare: reference polygon 8.56, USGS 09400650 8.11, FLO-2D IEA 8.80, StreamStats (pour point 35.16266,-111.68215) 5.82 sq mi
+                  mean elev 7,186 ft, mean slope 9.5%, impervious 2.5%
+TIMING          : Tc grid 5.63 h | Kirpich 2.14 h | FCDMC 6.75 h ; R 3.53 h (fcdmc)
+                  longest flowpath 7.19 mi at 85 ft/mi
+                  Tc path 7.19 mi, mean 1.9 ft/s: sheet 0.34 h | shallow 0.21 h (0.42 mi) | channel 5.07 h (6.75 mi) | in DEM depressions 0.19 h
+RUNOFF          : CN mean 74.9 (AMC II 74.9); excess 0.00 in of 0.41 in (ratio 0.00); volume 0 ac-ft
+PEAK            : 0 cfs at Nov 02 00:55 MST (translation only 1 cfs)
+CROSS-CHECKS    : lumped SCS UH 0 cfs | static rational (C=runoff ratio, i at Tc) 0 cfs | rain ceiling i(Tc)*A 325 cfs
+                  Tc/R by ARC: I 5.63/3.53 h (0 it) | II 5.63/3.53 h (0 it) | III 13.00/8.95 h (11 it); bankfull pass 5.63/3.53 h
+DESIGN CHECK    : NOAA Atlas 14 100-yr 24-hr, alternating block, ARF, AMC II: 4,434 cfs (Tc 1.66 h)
+                  vs IEA (FLO-2D) design, below Holmes Ave: 1,391 cfs (319%)
+                  vs IEA (FLO-2D) design, above Holmes Ave: 1,088 cfs (408%)
+                  vs FEMA FIS 100-yr at Palmer Ave: 470 cfs (943%)
+                  vs StreamStats natural 100-yr (area-transferred): 2,055 cfs (216%)
+CHANNEL         : event peak = 0% of the 1,391 cfs design flow
+
+Storm depths (basin average, max running window):
+     15m:  0.07 in  ARF 0.96  ~<1-yr
+     30m:  0.12 in  ARF 0.97  ~<1-yr
+      1h:  0.18 in  ARF 0.97  ~<1-yr
+      2h:  0.21 in  ARF 0.98  ~<1-yr
+      3h:  0.27 in  ARF 0.98  ~<1-yr
+      6h:  0.36 in  ARF 0.98  ~<1-yr
+     12h:  0.41 in  ARF 0.99  ~<1-yr
+     24h:  0.41 in  ARF 0.99  ~<1-yr
+
+Gauge checks (never used to adjust results):
+   rain Mt Dell rain: no data
+        - no file matching ['*mt*dell*rain*', '*mt*dell*', '*mtdell*', '*sinclair*']
+   stage 3403: no data
+        - no file matching *3403*
+
+Flags:
+   - Published statistics are for 5.82 sq mi; transferred to the delineated 8.81 sq mi by Q*(At/As)^0.6 (x1.28).
+   - Cold season and mean elevation 7,186 ft: snow or frozen ground possible - CN losses may be wrong.
+   - Structure note (not modelled): Dam about 1.4 mi upstream of Mountain Dell (gauge 3403 reads its pool): 24 in CMP low outlet, spillway about 20 ft up. Below the spillway the release is roughly 40-50 cfs. Results are natural, unregulated flow.
+
+Data sources: DEM: USGS 3DEP 10 m; Land cover: Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious; Soils: SSURGO (cache); Precip frequency: NOAA Atlas 14 PFDS (centroid); Radar: MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly

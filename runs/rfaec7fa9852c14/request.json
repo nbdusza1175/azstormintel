@@ -1,0 +1,12 @@
+{
+ "run_id": "rfaec7fa9852c14",
+ "start_mst": "2026-11-01T16:00",
+ "end_mst": "2026-11-02T16:00",
+ "basins": [
+  "fort_valley",
+  "mountain_dell"
+ ],
+ "custom_basin": null,
+ "requested_utc": "2026-11-19T23:24:31.682785+00:00",
+ "pipeline_version": "3.4.0"
+}
