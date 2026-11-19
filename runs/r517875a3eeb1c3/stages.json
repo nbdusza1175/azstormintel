@@ -1,0 +1,12 @@
+{
+ "validate": {
+  "ok": true,
+  "seconds": 0,
+  "note": ""
+ },
+ "radar": {
+  "ok": false,
+  "seconds": 4,
+  "note": ""
+ }
+}
