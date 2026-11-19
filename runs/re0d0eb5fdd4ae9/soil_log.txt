@@ -1,0 +1,25 @@
+SMAP SPL4SMGP versions in CMR: ['008']
+SMAP cells touching fort_valley: 5 (largest share 72%)
+SMAP cells touching mountain_dell: 4 (largest share 56%)
+  SMAP prior 2026-10-19T21:00:00.000Z v008: fort_valley rz 0.5228, mountain_dell rz 0.5356
+  SMAP prior 2026-10-22T21:00:00.000Z v008: fort_valley rz 0.5668, mountain_dell rz 0.5786
+  SMAP prior 2026-10-25T21:00:00.000Z v008: fort_valley rz 0.5608, mountain_dell rz 0.5701
+  SMAP prior 2026-10-28T21:00:00.000Z v008: fort_valley rz 0.5455, mountain_dell rz 0.5579
+  SMAP prior 2026-10-31T21:00:00.000Z v008: fort_valley rz 0.5556, mountain_dell rz 0.5732
+  SMAP prior 2026-11-03T21:00:00.000Z v008: fort_valley rz 0.5886, mountain_dell rz 0.6187
+  SMAP prior 2026-11-06T21:00:00.000Z v008: fort_valley rz 0.5755, mountain_dell rz 0.6001
+  SMAP prior 2026-11-09T21:00:00.000Z v008: fort_valley rz 0.5647, mountain_dell rz 0.5887
+  SMAP prior 2026-11-12T21:00:00.000Z v008: fort_valley rz 0.5612, mountain_dell rz 0.5863
+  SMAP prior 2026-11-15T21:00:00.000Z v008: fort_valley rz 0.5694, mountain_dell rz 0.5967
+  SMAP climatology 2015 2015-11-18T21:00:00.000Z v008: fort_valley rz 0.5515, mountain_dell rz 0.5594
+  SMAP climatology 2016 2016-11-18T21:00:00.000Z v008: fort_valley rz 0.4755, mountain_dell rz 0.4761
+  SMAP climatology 2017 2017-11-18T21:00:00.000Z v008: fort_valley rz 0.4467, mountain_dell rz 0.4504
+  SMAP climatology 2018 2018-11-18T21:00:00.000Z v008: fort_valley rz 0.5015, mountain_dell rz 0.5062
+  SMAP climatology 2019 2019-11-18T21:00:00.000Z v008: fort_valley rz 0.4409, mountain_dell rz 0.4459
+  SMAP climatology 2020 2020-11-18T21:00:00.000Z v008: fort_valley rz 0.4367, mountain_dell rz 0.4382
+  SMAP climatology 2021 2021-11-18T21:00:00.000Z v008: fort_valley rz 0.4622, mountain_dell rz 0.4711
+  SMAP climatology 2022 2022-11-18T21:00:00.000Z v008: fort_valley rz 0.5053, mountain_dell rz 0.5084
+  SMAP climatology 2023 2023-11-18T21:00:00.000Z v008: fort_valley rz 0.4536, mountain_dell rz 0.4583
+  SMAP climatology 2024 2024-11-18T21:00:00.000Z v008: fort_valley rz 0.4798, mountain_dell rz 0.4838
+  SMAP climatology 2025 2025-11-18T21:00:00.000Z v008: fort_valley rz 0.5336, mountain_dell rz 0.5442
+wrote soil.json; errors: 1

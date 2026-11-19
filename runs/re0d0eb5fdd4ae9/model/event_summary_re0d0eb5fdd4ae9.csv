@@ -1,0 +1,3 @@
+basin,area_sqmi,storm,peak_cfs,flood,Tc_hr,R_hr,CN,ARC,band,flags
+Fort Valley (Rio de Flag @ Snowbowl Rd),28.99,~n/a storm at 15m (0.00 in),0,"Peak ~ 0 cfs, about a n/a flood",5.18,2.42,75.9,II,Antecedent band: ARC I 0 cfs (~n/a) | ARC II 0 cfs (~n/a) | ARC III 0 cfs (~n/a),4
+Mountain Dell (Sinclair Wash),8.81,~n/a storm at 15m (0.00 in),0,"Peak ~ 0 cfs, about a n/a flood",5.63,3.53,74.9,II,Antecedent band: ARC I 0 cfs (~n/a) | ARC II 0 cfs (~n/a) | ARC III 0 cfs (~n/a),5
