@@ -1,0 +1,19 @@
+{
+ "basins": {
+  "fort_valley": {
+   "ok": true,
+   "path": "fort_valley/summary.json",
+   "run_utc": "2026-11-19T23:27:38.393303+00:00",
+   "version": "3.4.0"
+  },
+  "mountain_dell": {
+   "ok": true,
+   "path": "mountain_dell/summary.json",
+   "run_utc": "2026-11-19T23:27:38.393316+00:00",
+   "version": "3.4.0"
+  }
+ },
+ "model_event": "re0d0eb5fdd4ae9",
+ "label": "Nov 18 16:00 \u2013 Nov 19, 2026 16:00 MST",
+ "version": "3.4.0"
+}

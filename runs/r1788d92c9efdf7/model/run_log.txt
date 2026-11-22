@@ -1,0 +1,52 @@
+
+=== Camelback Canyon: Camelback Canyon · Oct 29 12:00 – Nov 1, 2026 12:00 MST ===
+  grid 417 x 375 @ 10 m
+  DEM: USGS 3DEP 10 m via 3DEP ImageServer, 417x375
+  basin 0.15 sq mi, Tc 0.66 h, R 0.65 h, L 0.91 mi; Tc path: sheet 0.64 h, shallow 0.00 h (0.00 mi), channel 0.02 h (0.02 mi), in DEM depressions 0.00 h
+  MRMS MultiSensor_QPE_01H_Pass2_00.00: downloading 72 of 72 files
+  MRMS RadarOnly_QPE_15M_00.00: downloading 288 of 288 files
+  MRMS RadarOnly_QPE_01H_00.00: downloading 72 of 72 files
+  MRMS MultiSensor_QPE_24H_Pass2_00.00: downloading 60 of 60 files
+  ARC I: peak 6 cfs (bankfull pass 6); Tc 0.65 h, R 0.64 h, 1 kinematic iterations
+  ARC II: peak 14 cfs (bankfull pass 14); Tc 0.65 h, R 0.64 h, 1 kinematic iterations
+  ARC III: peak 19 cfs (bankfull pass 19); Tc 0.65 h, R 0.64 h, 1 kinematic iterations
+  MRMS PrecipFlag_00.00: downloading 10 of 10 files
+Camelback Canyon - Camelback Canyon · Oct 29 12:00 – Nov 1, 2026 12:00 MST   (coconino_storm v3.4.0, ModClark + distributed CN)
+==============================================================================
+FLOOD INTENSITY : Peak ~ 14 cfs, about a <2-yr flood
+                  90% prediction range: <2-yr to 2.1-yr
+STORM INTENSITY : ~3.9-yr storm at 48h (2.07 in)
+                  total 2.17 in, wettest hour 0.56 in, flood vs rain rarity flood 0.5x the storm return period
+                  Antecedent band: ARC I 6 cfs (~<2-yr) | ARC II 14 cfs (~<2-yr) | ARC III 19 cfs (~<2-yr)
+ANTECEDENT      : ARC II by NEH-630 ARC II (median) with ARC I-III band
+                  API 0.20 in (dry), prior 5/7/20/60 d 0.00/0.05/0.85/2.31 in; NEH-4 5-day rule -> ARC I
+BASIN           : 0.15 sq mi delineated (reference polygon, D8 routing inside it); compare: reference polygon 0.15 sq mi
+                  mean elev 1,557 ft, mean slope 51.3%, impervious 18.6%
+TIMING          : Tc grid 0.65 h | Kirpich 0.17 h | FCDMC 0.43 h ; R 0.64 h (fcdmc)
+                  longest flowpath 0.91 mi at 1036 ft/mi
+                  Tc path 0.03 mi, mean 0.1 ft/s: sheet 0.64 h | shallow 0.00 h (0.00 mi) | channel 0.01 h (0.02 mi) | in DEM depressions 0.00 h
+RUNOFF          : CN mean 82.3 (AMC II 82.3); excess 0.78 in of 2.17 in (ratio 0.36); volume 6 ac-ft
+PEAK            : 14 cfs at Nov 01 06:55 MST (translation only 24 cfs)
+CROSS-CHECKS    : lumped SCS UH 19 cfs | static rational (C=runoff ratio, i at Tc) 25 cfs | rain ceiling i(Tc)*A 68 cfs
+                  Tc/R by ARC: I 0.65/0.64 h (1 it) | II 0.65/0.64 h (1 it) | III 0.65/0.64 h (1 it); bankfull pass 0.66/0.65 h
+
+Storm depths (basin average, max running window):
+     15m:  0.30 in  ARF 1.00  ~<1-yr
+     30m:  0.38 in  ARF 1.00  ~<1-yr
+      1h:  0.62 in  ARF 1.00  ~1.0-yr
+      2h:  0.66 in  ARF 1.00  ~<1-yr
+      3h:  0.91 in  ARF 1.00  ~1.4-yr
+      6h:  0.91 in  ARF 1.00  ~1.0-yr
+     12h:  1.01 in  ARF 1.00  ~<1-yr
+     24h:  1.12 in  ARF 1.00  ~<1-yr
+     48h:  2.07 in  ARF 1.00  ~3.9-yr
+     72h:  2.17 in  ARF 1.00  ~3.6-yr
+
+Gauge checks (never used to adjust results):
+   (no gauge files found)
+
+Flags:
+   - DEM delineation gave 2.30 sq mi vs reference polygon 0.15 sq mi (1462% diff); routing constrained to the reference polygon.
+   - 90% of basin has no SSURGO hydrologic soil group; default HSG C used there.
+
+Data sources: DEM: USGS 3DEP 10 m; Land cover: Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious; Soils: SSURGO via Soil Data Access; Precip frequency: NOAA Atlas 14 PFDS (centroid); Radar: MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly

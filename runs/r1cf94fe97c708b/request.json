@@ -1,0 +1,10 @@
+{
+ "run_id": "r1cf94fe97c708b",
+ "start_mst": "2026-11-01T10:00",
+ "end_mst": "2026-11-02T10:00",
+ "basins": [
+  "fort_valley"
+ ],
+ "requested_utc": "2026-11-16T17:31:25.554423+00:00",
+ "pipeline_version": "3.4.0"
+}

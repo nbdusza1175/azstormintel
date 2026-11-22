@@ -1,0 +1,52 @@
+
+=== Fort Valley (Rio de Flag @ Snowbowl Rd): Nov 1 10:00 – Nov 2, 2026 10:00 MST ===
+  grid 1371 x 1448 @ 10 m
+  basin 28.99 sq mi, Tc 5.18 h, R 2.42 h, L 11.74 mi; Tc path: sheet 0.30 h, shallow 0.28 h (0.61 mi), channel 4.60 h (5.22 mi), in DEM depressions 0.33 h
+  MRMS MultiSensor_QPE_01H_Pass2_00.00: downloading 24 of 24 files
+  MRMS RadarOnly_QPE_15M_00.00: downloading 96 of 96 files
+  MRMS RadarOnly_QPE_01H_00.00: downloading 24 of 24 files
+  MRMS MultiSensor_QPE_24H_Pass2_00.00: downloading 60 of 60 files
+  ARC I: peak 2 cfs (bankfull pass 5); Tc 28.35 h, R 15.95 h, 12 kinematic iterations
+  ARC II: peak 168 cfs (bankfull pass 157); Tc 4.56 h, R 2.10 h, 4 kinematic iterations
+  ARC III: peak 1,021 cfs (bankfull pass 693); Tc 2.41 h, R 1.03 h, 6 kinematic iterations
+  MRMS PrecipFlag_00.00: downloading 10 of 10 files
+Fort Valley (Rio de Flag @ Snowbowl Rd) - Nov 1 10:00 – Nov 2, 2026 10:00 MST   (coconino_storm v3.4.0, ModClark + distributed CN)
+==============================================================================
+FLOOD INTENSITY : Peak ~ 168 cfs, about a 2.1-yr flood
+                  90% prediction range: <2-yr to 7.1-yr
+STORM INTENSITY : ~<1-yr storm at 15m (0.07 in)
+                  total 1.11 in, wettest hour 0.14 in, flood vs rain rarity flood 2.1x the storm return period
+                  Antecedent band: ARC I 2 cfs (~<2-yr) | ARC II 168 cfs (~2.1-yr) | ARC III 1,021 cfs (~49-yr)
+ANTECEDENT      : ARC II by NEH-630 ARC II (median) with ARC I-III band
+                  API 2.92 in (wet), prior 5/7/20/60 d 1.26/1.26/5.21/12.08 in; NEH-4 5-day rule -> ARC III
+BASIN           : 28.99 sq mi delineated (DEM delineation (priority-flood, D8)); compare: reference polygon 29.01, StreamStats 29.00 sq mi
+                  mean elev 8,127 ft, mean slope 15.6%, impervious 1.0%
+TIMING          : Tc grid 4.56 h | Kirpich 1.67 h | FCDMC 3.98 h ; R 2.10 h (fcdmc)
+                  longest flowpath 11.74 mi at 431 ft/mi
+                  Tc path 11.71 mi, mean 3.8 ft/s: sheet 0.12 h | shallow 0.06 h (0.40 mi) | channel 4.39 h (11.28 mi) | in DEM depressions 0.16 h
+RUNOFF          : CN mean 75.9 (AMC II 75.9); excess 0.07 in of 1.11 in (ratio 0.06); volume 111 ac-ft
+PEAK            : 168 cfs at Nov 02 01:25 MST (translation only 250 cfs)
+CROSS-CHECKS    : lumped SCS UH 167 cfs | static rational (C=runoff ratio, i at Tc) 152 cfs | rain ceiling i(Tc)*A 2,357 cfs
+                  Tc/R by ARC: I 28.35/15.95 h (12 it) | II 4.56/2.10 h (4 it) | III 2.41/1.03 h (6 it); bankfull pass 5.18/2.42 h
+
+Storm depths (basin average, max running window):
+     15m:  0.07 in  ARF 0.88  ~<1-yr
+     30m:  0.12 in  ARF 0.90  ~<1-yr
+      1h:  0.16 in  ARF 0.92  ~<1-yr
+      2h:  0.29 in  ARF 0.93  ~<1-yr
+      3h:  0.42 in  ARF 0.94  ~<1-yr
+      6h:  0.72 in  ARF 0.96  ~<1-yr
+     12h:  1.03 in  ARF 0.97  ~<1-yr
+     24h:  1.11 in  ARF 0.98  ~<1-yr
+
+Gauge checks (never used to adjust results):
+   rain 3406: no data
+        - no file matching *3406*
+   stage 3407: no data
+        - no file matching *3407*
+
+Flags:
+   - Cold season and mean elevation 8,127 ft: snow or frozen ground possible - CN losses may be wrong.
+   - Basin is 29.0 sq mi: single linear reservoir, no channel storage routing; treat peak as screening-level.
+
+Data sources: DEM: USGS 3DEP 10 m; Land cover: Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious; Soils: SSURGO (cache); Precip frequency: NOAA Atlas 14 PFDS (centroid); Radar: MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly

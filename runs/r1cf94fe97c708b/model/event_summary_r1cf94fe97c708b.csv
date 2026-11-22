@@ -1,0 +1,2 @@
+basin,area_sqmi,storm,peak_cfs,flood,Tc_hr,R_hr,CN,ARC,band,flags
+Fort Valley (Rio de Flag @ Snowbowl Rd),28.99,~<1-yr storm at 15m (0.07 in),168,"Peak ~ 168 cfs, about a 2.1-yr flood",4.56,2.1,75.9,II,"Antecedent band: ARC I 2 cfs (~<2-yr) | ARC II 168 cfs (~2.1-yr) | ARC III 1,021 cfs (~49-yr)",2

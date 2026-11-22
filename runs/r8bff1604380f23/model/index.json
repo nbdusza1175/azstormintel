@@ -1,0 +1,13 @@
+{
+ "basins": {
+  "upload": {
+   "ok": true,
+   "path": "upload/summary.json",
+   "run_utc": "2026-11-16T19:01:05.473613+00:00",
+   "version": "3.4.0"
+  }
+ },
+ "model_event": "r8bff1604380f23",
+ "label": "fort valley \u00b7 Nov 13 11:00 \u2013 Nov 15, 2026 11:00 MST",
+ "version": "3.4.0"
+}

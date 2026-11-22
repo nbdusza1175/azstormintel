@@ -1,0 +1,52 @@
+{
+ "run_id": "r1788d92c9efdf7",
+ "start_mst": "2026-10-29T12:00",
+ "end_mst": "2026-11-01T12:00",
+ "basins": [
+  "upload"
+ ],
+ "custom_basin": {
+  "name": "Camelback Canyon",
+  "area_sqmi": 0.15,
+  "outlet_from_file": true,
+  "streamstats_report": true
+ },
+ "requested_utc": "2026-11-16T19:33:54.749578+00:00",
+ "pipeline_version": "3.4.0",
+ "name": "Camelback Canyon \u00b7 Oct 29 12:00 \u2013 Nov 1, 2026 12:00 MST",
+ "ok": true,
+ "stages": {
+  "validate": {
+   "ok": true,
+   "seconds": 0,
+   "note": ""
+  },
+  "radar": {
+   "ok": true,
+   "seconds": 122,
+   "note": ""
+  },
+  "model": {
+   "ok": true,
+   "seconds": 151,
+   "note": ""
+  },
+  "soil": {
+   "ok": true,
+   "seconds": 105,
+   "note": ""
+  }
+ },
+ "sources": {
+  "upload": {
+   "DEM": "USGS 3DEP 10 m",
+   "Land cover": "Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious",
+   "Soils": "SSURGO via Soil Data Access",
+   "Precip frequency": "NOAA Atlas 14 PFDS (centroid)",
+   "Radar": "MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly"
+  }
+ },
+ "finished_utc": "2026-11-16T19:40:12.923439+00:00",
+ "start_utc": "2026-10-29T19:00:00+00:00",
+ "end_utc": "2026-11-01T19:00:00+00:00"
+}

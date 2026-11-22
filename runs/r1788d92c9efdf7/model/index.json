@@ -1,0 +1,13 @@
+{
+ "basins": {
+  "upload": {
+   "ok": true,
+   "path": "upload/summary.json",
+   "run_utc": "2026-11-16T19:38:27.373273+00:00",
+   "version": "3.4.0"
+  }
+ },
+ "model_event": "r1788d92c9efdf7",
+ "label": "Camelback Canyon \u00b7 Oct 29 12:00 \u2013 Nov 1, 2026 12:00 MST",
+ "version": "3.4.0"
+}

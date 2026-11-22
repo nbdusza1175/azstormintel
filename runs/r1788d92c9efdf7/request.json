@@ -1,0 +1,16 @@
+{
+ "run_id": "r1788d92c9efdf7",
+ "start_mst": "2026-10-29T12:00",
+ "end_mst": "2026-11-01T12:00",
+ "basins": [
+  "upload"
+ ],
+ "custom_basin": {
+  "name": "Camelback Canyon",
+  "area_sqmi": 0.15,
+  "outlet_from_file": true,
+  "streamstats_report": true
+ },
+ "requested_utc": "2026-11-16T19:33:54.749578+00:00",
+ "pipeline_version": "3.4.0"
+}

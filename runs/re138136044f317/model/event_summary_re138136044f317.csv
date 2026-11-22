@@ -1,0 +1,2 @@
+basin,area_sqmi,storm,peak_cfs,flood,Tc_hr,R_hr,CN,ARC,band,flags
+Munds combined basin (Munds 1  Munds 2),21.59,~41-yr storm at 24h (5.00 in),3240,"Peak ~ 3,240 cfs, about a 33-yr flood",2.35,1.39,74.3,II,"Antecedent band: ARC I 1,507 cfs (~10-yr) | ARC II 3,240 cfs (~33-yr) | ARC III 4,428 cfs (~59-yr)",3

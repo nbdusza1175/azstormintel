@@ -1,0 +1,25 @@
+SMAP SPL4SMGP versions in CMR: ['008']
+SMAP cells touching fort_valley: 5 (largest share 72%)
+  SMAP event start 2026-11-01T15:00:00.000Z v008: fort_valley rz 0.5964
+  SMAP prior 2026-10-02T15:00:00.000Z v008: fort_valley rz 0.51
+  SMAP prior 2026-10-05T15:00:00.000Z v008: fort_valley rz 0.4914
+  SMAP prior 2026-10-08T15:00:00.000Z v008: fort_valley rz 0.4845
+  SMAP prior 2026-10-11T15:00:00.000Z v008: fort_valley rz 0.5126
+  SMAP prior 2026-10-14T15:00:00.000Z v008: fort_valley rz 0.5564
+  SMAP prior 2026-10-17T15:00:00.000Z v008: fort_valley rz 0.5253
+  SMAP prior 2026-10-20T15:00:00.000Z v008: fort_valley rz 0.5232
+  SMAP prior 2026-10-23T15:00:00.000Z v008: fort_valley rz 0.5733
+  SMAP prior 2026-10-26T15:00:00.000Z v008: fort_valley rz 0.555
+  SMAP prior 2026-10-29T15:00:00.000Z v008: fort_valley rz 0.545
+  SMAP climatology 2015 2015-11-01T15:00:00.000Z v008: fort_valley rz 0.5335
+  SMAP climatology 2016 2016-11-01T15:00:00.000Z v008: fort_valley rz 0.4844
+  SMAP climatology 2017 2017-11-01T15:00:00.000Z v008: fort_valley rz 0.4522
+  SMAP climatology 2018 2018-11-01T15:00:00.000Z v008: fort_valley rz 0.5167
+  SMAP climatology 2019 2019-11-01T15:00:00.000Z v008: fort_valley rz 0.4454
+  SMAP climatology 2020 2020-11-01T15:00:00.000Z v008: fort_valley rz 0.4243
+  SMAP climatology 2021 2021-11-01T15:00:00.000Z v008: fort_valley rz 0.477
+  SMAP climatology 2022 2022-11-01T15:00:00.000Z v008: fort_valley rz 0.4983
+  SMAP climatology 2023 2023-11-01T15:00:00.000Z v008: fort_valley rz 0.4554
+  SMAP climatology 2024 2024-11-01T15:00:00.000Z v008: fort_valley rz 0.4934
+  SMAP climatology 2025 2025-11-01T15:00:00.000Z v008: fort_valley rz 0.4704
+wrote soil.json; errors: 0

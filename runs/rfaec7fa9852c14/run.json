@@ -1,0 +1,55 @@
+{
+ "run_id": "rfaec7fa9852c14",
+ "start_mst": "2026-11-01T16:00",
+ "end_mst": "2026-11-02T16:00",
+ "basins": [
+  "fort_valley",
+  "mountain_dell"
+ ],
+ "custom_basin": null,
+ "requested_utc": "2026-11-19T23:24:31.682785+00:00",
+ "pipeline_version": "3.4.0",
+ "name": "Nov 1 16:00 \u2013 Nov 2, 2026 16:00 MST",
+ "ok": true,
+ "stages": {
+  "validate": {
+   "ok": true,
+   "seconds": 0,
+   "note": ""
+  },
+  "radar": {
+   "ok": true,
+   "seconds": 4,
+   "note": ""
+  },
+  "model": {
+   "ok": true,
+   "seconds": 72,
+   "note": ""
+  },
+  "soil": {
+   "ok": true,
+   "seconds": 74,
+   "note": ""
+  }
+ },
+ "sources": {
+  "fort_valley": {
+   "DEM": "USGS 3DEP 10 m",
+   "Land cover": "Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious",
+   "Soils": "SSURGO (cache)",
+   "Precip frequency": "NOAA Atlas 14 PFDS (centroid)",
+   "Radar": "MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly"
+  },
+  "mountain_dell": {
+   "DEM": "USGS 3DEP 10 m",
+   "Land cover": "Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious",
+   "Soils": "SSURGO (cache)",
+   "Precip frequency": "NOAA Atlas 14 PFDS (centroid)",
+   "Radar": "MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly"
+  }
+ },
+ "finished_utc": "2026-11-19T23:27:01.344330+00:00",
+ "start_utc": "2026-11-01T23:00:00+00:00",
+ "end_utc": "2026-11-02T23:00:00+00:00"
+}

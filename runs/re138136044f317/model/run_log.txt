@@ -1,0 +1,53 @@
+
+=== Munds combined basin (Munds 1  Munds 2): Munds combined basin (Munds 1  Munds 2) · Oct 30 08:00 – Nov 2, 2026 20:00 MST ===
+  grid 1612 x 1068 @ 10 m
+  DEM: USGS 3DEP 10 m via 3DEP ImageServer, 1612x1068
+  basin 21.59 sq mi, Tc 7.78 h, R 5.27 h, L 14.32 mi; Tc path: sheet 0.22 h, shallow 0.14 h (0.53 mi), channel 7.42 h (13.27 mi), in DEM depressions 0.19 h
+  MRMS MultiSensor_QPE_01H_Pass2_00.00: downloading 84 of 84 files
+  MRMS RadarOnly_QPE_15M_00.00: downloading 336 of 336 files
+  MRMS RadarOnly_QPE_01H_00.00: downloading 84 of 84 files
+  MRMS MultiSensor_QPE_24H_Pass2_00.00: downloading 60 of 60 files
+  ARC I: peak 1,507 cfs (bankfull pass 1,239); Tc 2.94 h, R 1.79 h, 5 kinematic iterations
+  ARC II: peak 3,240 cfs (bankfull pass 2,256); Tc 2.35 h, R 1.39 h, 6 kinematic iterations
+  ARC III: peak 4,428 cfs (bankfull pass 2,928); Tc 2.18 h, R 1.28 h, 6 kinematic iterations
+  MRMS PrecipFlag_00.00: downloading 12 of 12 files
+Munds combined basin (Munds 1  Munds 2) - Munds combined basin (Munds 1  Munds 2) · Oct 30 08:00 – Nov 2, 2026 20:00 MST   (coconino_storm v3.4.0, ModClark + distributed CN)
+==============================================================================
+FLOOD INTENSITY : Peak ~ 3,240 cfs, about a 33-yr flood
+                  90% prediction range: 13-yr to 79-yr
+STORM INTENSITY : ~41-yr storm at 24h (5.00 in)
+                  total 6.04 in, wettest hour 0.48 in, flood vs rain rarity flood 0.8x the storm return period
+                  Antecedent band: ARC I 1,507 cfs (~10-yr) | ARC II 3,240 cfs (~33-yr) | ARC III 4,428 cfs (~59-yr)
+ANTECEDENT      : ARC II by NEH-630 ARC II (median) with ARC I-III band
+                  API 2.12 in (wet), prior 5/7/20/60 d 0.00/0.33/7.18/12.74 in; NEH-4 5-day rule -> ARC I
+BASIN           : 21.59 sq mi delineated (reference polygon, D8 routing inside it); compare: reference polygon 21.59 sq mi
+                  mean elev 7,123 ft, mean slope 11.4%, impervious 1.5%
+TIMING          : Tc grid 2.35 h | Kirpich 2.99 h | FCDMC 4.09 h ; R 1.39 h (fcdmc)
+                  longest flowpath 14.32 mi at 141 ft/mi
+                  Tc path 12.80 mi, mean 8.0 ft/s: sheet 0.47 h | shallow 0.21 h (0.51 mi) | channel 1.66 h (12.27 mi) | in DEM depressions 0.08 h
+RUNOFF          : CN mean 74.3 (AMC II 74.3); excess 3.26 in of 6.04 in (ratio 0.54); volume 3,753 ac-ft
+PEAK            : 3,240 cfs at Nov 01 10:10 MST (translation only 4,111 cfs)
+CROSS-CHECKS    : lumped SCS UH 3,543 cfs | static rational (C=runoff ratio, i at Tc) 3,068 cfs | rain ceiling i(Tc)*A 5,689 cfs
+                  Tc/R by ARC: I 2.94/1.79 h (5 it) | II 2.35/1.39 h (6 it) | III 2.18/1.28 h (6 it); bankfull pass 7.78/5.27 h
+
+Storm depths (basin average, max running window):
+     15m:  0.13 in  ARF 0.91  ~<1-yr
+     30m:  0.24 in  ARF 0.92  ~<1-yr
+      1h:  0.48 in  ARF 0.94  ~<1-yr
+      2h:  0.85 in  ARF 0.95  ~<1-yr
+      3h:  1.18 in  ARF 0.95  ~1.0-yr
+      6h:  1.96 in  ARF 0.97  ~3.7-yr
+     12h:  3.23 in  ARF 0.97  ~12-yr
+     24h:  5.00 in  ARF 0.98  ~41-yr
+     48h:  5.18 in  ARF 0.99  ~15-yr
+     72h:  6.04 in  ARF 0.99  ~21-yr
+
+Gauge checks (never used to adjust results):
+   (no gauge files found)
+
+Flags:
+   - DEM delineation gave 33.82 sq mi vs reference polygon 21.59 sq mi (57% diff); routing constrained to the reference polygon.
+   - Grid Tc 2.35 h disagrees with FCDMC Tc 4.09 h (ratio 0.57).
+   - Basin is 21.6 sq mi: single linear reservoir, no channel storage routing; treat peak as screening-level.
+
+Data sources: DEM: USGS 3DEP 10 m; Land cover: Annual NLCD 2024 land cover, Collection 1.1 (USGS; COG mirror on source.coop) - latest year on or before the 2026 event; impervious: Annual NLCD 2024 fractional impervious; Soils: SSURGO via Soil Data Access; Precip frequency: NOAA Atlas 14 PFDS (centroid); Radar: MRMS MultiSensor QPE Pass 2 01H (1 km); RadarOnly 15M rescaled to Pass 2 hourly

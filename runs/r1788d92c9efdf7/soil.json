@@ -1,0 +1,243 @@
+{
+ "product": "NASA SMAP L4 SPL4SMGP (9 km, 3-hourly)",
+ "event_start_utc": "2026-10-29T19:00:00+00:00",
+ "basins": {
+  "upload": {
+   "series": [
+    {
+     "t_utc": "2026-09-29T18:00:00.000Z",
+     "surface_wetness": 0.3907,
+     "rootzone_wetness": 0.2405,
+     "profile_wetness": 0.2384,
+     "rootzone_m3m3": 0.0949,
+     "soil_temp_l1_K": 296.9299,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-02T18:00:00.000Z",
+     "surface_wetness": 0.1497,
+     "rootzone_wetness": 0.2146,
+     "profile_wetness": 0.2301,
+     "rootzone_m3m3": 0.0846,
+     "soil_temp_l1_K": 303.074,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-05T18:00:00.000Z",
+     "surface_wetness": 0.1203,
+     "rootzone_wetness": 0.2062,
+     "profile_wetness": 0.2244,
+     "rootzone_m3m3": 0.0813,
+     "soil_temp_l1_K": 303.9572,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-08T18:00:00.000Z",
+     "surface_wetness": 0.1192,
+     "rootzone_wetness": 0.2028,
+     "profile_wetness": 0.2203,
+     "rootzone_m3m3": 0.08,
+     "soil_temp_l1_K": 305.7082,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-11T18:00:00.000Z",
+     "surface_wetness": 0.3744,
+     "rootzone_wetness": 0.2257,
+     "profile_wetness": 0.2328,
+     "rootzone_m3m3": 0.089,
+     "soil_temp_l1_K": 299.4307,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-14T18:00:00.000Z",
+     "surface_wetness": 0.2552,
+     "rootzone_wetness": 0.2282,
+     "profile_wetness": 0.2399,
+     "rootzone_m3m3": 0.09,
+     "soil_temp_l1_K": 294.6649,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-17T18:00:00.000Z",
+     "surface_wetness": 0.1238,
+     "rootzone_wetness": 0.215,
+     "profile_wetness": 0.2338,
+     "rootzone_m3m3": 0.0848,
+     "soil_temp_l1_K": 295.9131,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-20T18:00:00.000Z",
+     "surface_wetness": 0.1383,
+     "rootzone_wetness": 0.2123,
+     "profile_wetness": 0.2311,
+     "rootzone_m3m3": 0.0837,
+     "soil_temp_l1_K": 300.396,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-23T18:00:00.000Z",
+     "surface_wetness": 0.1973,
+     "rootzone_wetness": 0.2189,
+     "profile_wetness": 0.2353,
+     "rootzone_m3m3": 0.0863,
+     "soil_temp_l1_K": 296.9695,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "t_utc": "2026-10-26T18:00:00.000Z",
+     "surface_wetness": 0.1903,
+     "rootzone_wetness": 0.2166,
+     "profile_wetness": 0.234,
+     "rootzone_m3m3": 0.0854,
+     "soil_temp_l1_K": 295.7879,
+     "snow_mass_kgm2": 0.0
+    }
+   ],
+   "climatology": [
+    {
+     "year": 2015,
+     "t_utc": "2015-10-29T15:00:00.000Z",
+     "surface_wetness": 0.2599,
+     "rootzone_wetness": 0.2134,
+     "profile_wetness": 0.2274,
+     "rootzone_m3m3": 0.0842,
+     "soil_temp_l1_K": 292.7542,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2016,
+     "t_utc": "2016-10-29T15:00:00.000Z",
+     "surface_wetness": 0.1427,
+     "rootzone_wetness": 0.1804,
+     "profile_wetness": 0.1894,
+     "rootzone_m3m3": 0.0712,
+     "soil_temp_l1_K": 296.6828,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2017,
+     "t_utc": "2017-10-29T15:00:00.000Z",
+     "surface_wetness": 0.1215,
+     "rootzone_wetness": 0.1615,
+     "profile_wetness": 0.1662,
+     "rootzone_m3m3": 0.0637,
+     "soil_temp_l1_K": 294.7709,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2018,
+     "t_utc": "2018-10-29T15:00:00.000Z",
+     "surface_wetness": 0.1855,
+     "rootzone_wetness": 0.2779,
+     "profile_wetness": 0.3175,
+     "rootzone_m3m3": 0.1096,
+     "soil_temp_l1_K": 293.5308,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2019,
+     "t_utc": "2019-10-29T15:00:00.000Z",
+     "surface_wetness": 0.1097,
+     "rootzone_wetness": 0.1852,
+     "profile_wetness": 0.1973,
+     "rootzone_m3m3": 0.0731,
+     "soil_temp_l1_K": 286.1255,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2020,
+     "t_utc": "2020-10-29T15:00:00.000Z",
+     "surface_wetness": 0.1039,
+     "rootzone_wetness": 0.1574,
+     "profile_wetness": 0.1614,
+     "rootzone_m3m3": 0.0621,
+     "soil_temp_l1_K": 288.5076,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2021,
+     "t_utc": "2021-10-29T15:00:00.000Z",
+     "surface_wetness": 0.112,
+     "rootzone_wetness": 0.1862,
+     "profile_wetness": 0.1985,
+     "rootzone_m3m3": 0.0734,
+     "soil_temp_l1_K": 292.7072,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2022,
+     "t_utc": "2022-10-29T15:00:00.000Z",
+     "surface_wetness": 0.1325,
+     "rootzone_wetness": 0.2182,
+     "profile_wetness": 0.2394,
+     "rootzone_m3m3": 0.0861,
+     "soil_temp_l1_K": 290.0963,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2023,
+     "t_utc": "2023-10-29T15:00:00.000Z",
+     "surface_wetness": 0.1051,
+     "rootzone_wetness": 0.1617,
+     "profile_wetness": 0.167,
+     "rootzone_m3m3": 0.0638,
+     "soil_temp_l1_K": 291.6366,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2024,
+     "t_utc": "2024-10-29T15:00:00.000Z",
+     "surface_wetness": 0.111,
+     "rootzone_wetness": 0.1592,
+     "profile_wetness": 0.1636,
+     "rootzone_m3m3": 0.0628,
+     "soil_temp_l1_K": 293.5246,
+     "snow_mass_kgm2": 0.0
+    },
+    {
+     "year": 2025,
+     "t_utc": "2025-10-29T15:00:00.000Z",
+     "surface_wetness": 0.1747,
+     "rootzone_wetness": 0.2698,
+     "profile_wetness": 0.3069,
+     "rootzone_m3m3": 0.1064,
+     "soil_temp_l1_K": 292.7278,
+     "snow_mass_kgm2": 0.0
+    }
+   ],
+   "at_start": {
+    "granule_start_utc": "2026-10-29T15:00:00.000Z",
+    "surface_wetness": 0.1163,
+    "rootzone_wetness": 0.2095,
+    "profile_wetness": 0.2288,
+    "rootzone_m3m3": 0.0826,
+    "soil_temp_l1_K": 292.4515,
+    "snow_mass_kgm2": 0.0
+   },
+   "rootzone_percentile": 64,
+   "clim_min_median_max": [
+    0.157,
+    0.185,
+    0.278
+   ],
+   "relative": "near usual"
+  }
+ },
+ "errors": [],
+ "version": "008",
+ "cells": [
+  {
+   "basin": "upload",
+   "cells": [
+    {
+     "lat": 33.5027,
+     "lon": -111.9865,
+     "weight": 1.0
+    }
+   ]
+  }
+ ],
+ "note": "Check only: shown beside the model's ARC I-III band; it does not change the headline. Percentile is event-start root-zone wetness against the same date and hour in earlier SMAP years."
+}

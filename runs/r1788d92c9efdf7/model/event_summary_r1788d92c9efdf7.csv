@@ -1,0 +1,2 @@
+basin,area_sqmi,storm,peak_cfs,flood,Tc_hr,R_hr,CN,ARC,band,flags
+Camelback Canyon,0.15,~3.9-yr storm at 48h (2.07 in),14,"Peak ~ 14 cfs, about a <2-yr flood",0.65,0.64,82.3,II,Antecedent band: ARC I 6 cfs (~<2-yr) | ARC II 14 cfs (~<2-yr) | ARC III 19 cfs (~<2-yr),2

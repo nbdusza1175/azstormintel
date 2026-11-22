@@ -1,0 +1,13 @@
+{
+ "basins": {
+  "upload": {
+   "ok": true,
+   "path": "upload/summary.json",
+   "run_utc": "2026-11-16T19:15:39.900806+00:00",
+   "version": "3.4.0"
+  }
+ },
+ "model_event": "re138136044f317",
+ "label": "Munds combined basin (Munds 1  Munds 2) \u00b7 Oct 30 08:00 \u2013 Nov 2, 2026 20:00 MST",
+ "version": "3.4.0"
+}

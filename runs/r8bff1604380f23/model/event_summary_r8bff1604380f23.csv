@@ -1,0 +1,2 @@
+basin,area_sqmi,storm,peak_cfs,flood,Tc_hr,R_hr,CN,ARC,band,flags
+fort valley,28.99,~<1-yr storm at 15m (0.04 in),1,"Peak ~ 1 cfs, about a <2-yr flood",33.87,19.44,75.9,II,Antecedent band: ARC I 0 cfs (~<2-yr) | ARC II 1 cfs (~<2-yr) | ARC III 69 cfs (~<2-yr),3
